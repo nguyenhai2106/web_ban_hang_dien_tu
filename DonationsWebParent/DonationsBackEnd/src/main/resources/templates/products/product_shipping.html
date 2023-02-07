@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+	<div th:fragment="content" th:remove="tag">
+		<div class="pt-3 mx-auto ps-4">
+			<div class="form-group row">
+				<p>
+					Các thông tin dưới đây được dùng để tính toán phí vận chuyển hàng
+					hóa. <br /> Vui lòng điền các giá trị dài (L), rộng (W), cao (H) để
+					xác định kích thước thùng dùng để đóng gói hàng hóa.
+				</p>
+			</div>
+			<div class="input-group mb-4 row">
+				<label class="col-sm-2 col-form-label">Length (cm)</label>
+				<div class="col-sm-10">
+					<input type="number" class="form-control" th:field="*{length}" step="1"
+						required="required" min="0" />
+				</div>
+			</div>
+			<div class="input-group mb-4 row">
+				<label class="col-sm-2 col-form-label">Width (cm)</label>
+				<div class="col-sm-10">
+					<input type="number" class="form-control" th:field="*{width}" step="1"
+						required="required" min="0" />
+				</div>
+			</div>
+			<div class="input-group mb-4 row">
+				<label class="col-sm-2 col-form-label">Height (cm)</label>
+				<div class="col-sm-10">
+					<input type="number" class="form-control" th:field="*{height}" step="1"
+						required="required" min="0" />
+				</div>
+			</div>
+			<div class="input-group row">
+				<label class="col-sm-2 col-form-label">Weight (g)</label>
+				<div class="col-sm-10">
+					<input type="number" class="form-control" th:field="*{weight}" step="10"
+						required="required" min="0" />
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

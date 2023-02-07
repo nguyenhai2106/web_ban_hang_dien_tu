@@ -64,6 +64,7 @@
                 "Verdana"
             ],
             fontColor: true,
+            backgroundColor: true,
             fontSize: true,
 
             // uploads
@@ -138,12 +139,13 @@
                 'alignLeft': 'Align left',
                 'alignCenter': 'Align centered',
                 'alignRight': 'Align right',
-                'addOrderedList': 'Add ordered list',
-                'addUnorderedList': 'Add unordered list',
-                'addHeading': 'Add Heading/title',
-                'addFont': 'Add font',
-                'addFontColor': 'Add font color',
-                'addFontSize': 'Add font size',
+                'addOrderedList': 'Ordered list',
+                'addUnorderedList': 'Unordered list',
+                'addHeading': 'Heading/title',
+                'addFont': 'Font',
+                'addFontColor': 'Font color',
+                'addBackgroundColor': 'Background color',
+                'addFontSize': 'Font size',
                 'addImage': 'Add image',
                 'addVideo': 'Add video',
                 'addFile': 'Add file',
@@ -159,14 +161,22 @@
             // privacy
             youtubeCookies: false,
 
+            // preview
+            preview: false,
+
+            // placeholder
+            placeholder: '',
+
             // dev settings
             useSingleQuotes: false,
             height: 0,
             heightPercentage: 0,
+            adaptiveHeight: false,
             id: "",
             class: "",
             useParagraph: false,
             maxlength: 0,
+            maxlengthIncludeHTML: false,
             callback: undefined,
             useTabForNext: false
 
@@ -246,8 +256,13 @@
             $btnFontColor = $('<a />', {
                 class: "richText-btn",
                 "title": settings.translations.addFontColor,
-                html: '<span class="fa fa-paint-brush"></span>'
+                html: '<span class="fa fa-pencil"></span>'
             }), // font color
+            $btnBackgroundColor = $('<a />', {
+                class: "richText-btn",
+                "title": settings.translations.addBackgroundColor,
+                html: '<span class="fa fa-paint-brush"></span>'
+            }), // background color
             $btnFontSize = $('<a />', {
                 class: "richText-btn",
                 "title": settings.translations.addFontSize,
@@ -306,7 +321,7 @@
             $formInput = $('<input />', {type: "text"}), //form input field
             $formInputFile = $('<input />', {type: "file"}), // form file input field
             $formInputSelect = $('<select />'),
-            $formButton = $('<button />', {text: settings.translations.add, class: "btn"}); // button
+            $formButton = $('<button />', {text: settings.translations.add, class: "btn", type: "button"}); // button
 
         /* internal settings */
         var savedSelection; // caret position/selection
@@ -348,11 +363,10 @@
         $fontColors.html(loadColors("forecolor"));
         $btnFontColor.append($dropdownOuter.clone().append($fontColors.prepend($dropdownClose.clone())));
 
-
         /* background colors */
-        //var $bgColors = $dropdownList.clone();
-        //$bgColors.html(loadColors("hiliteColor"));
-        //$btnBGColor.append($dropdownOuter.clone().append($bgColors));
+        var $backgroundColors = $dropdownList.clone();
+        $backgroundColors.html(loadColors("hiliteColor"));
+        $btnBackgroundColor.append($dropdownOuter.clone().append($backgroundColors.prepend($dropdownClose.clone())));
 
         /* box dropdown for links */
         var $linksDropdown = $dropdownBox.clone();
@@ -532,12 +546,33 @@
 
             $editor = $('<div />', {class: "richText"});
             var $toolbar = $('<div />', {class: "richText-toolbar"});
-            var $editorView = $('<div />', {class: "richText-editor", id: editorID, contenteditable: true});
+            var $editorView = $('<div />', {class: "richText-editor", id: editorID, contenteditable: !settings.preview});
             var tabindex = $inputElement.prop('tabindex');
             if (tabindex >= 0 && settings.useTabForNext === true) {
                 $editorView.attr('tabindex', tabindex);
             }
-            $toolbar.append($toolbarList);
+            if (!settings.preview) {
+                $toolbar.append($toolbarList);
+            }
+            if (settings.placeholder) {
+                if (!$editorView.text().length) {
+                    $editorView.attr('placeholder', settings.placeholder);
+                    $editorView.on('focus', function () {
+                        $editorView.removeAttr('placeholder');
+                    });
+
+                    $editorView.on('focusout blur', function () {
+                        if (this.hasAttribute('placeholder')) {
+                            return;
+                        }
+                        if ($(this).text().length) {
+                            return;
+                        }
+                        $(this).attr('placeholder', settings.placeholder);
+                    });
+                }
+            }
+
             settings.$editor = $editor;
 
             /* text formatting */
@@ -586,9 +621,14 @@
                 $toolbarList.append($toolbarElement.clone().append($btnHeading));
             }
 
-            /* colors */
+            /* font colors */
             if (settings.fontColor === true) {
                 $toolbarList.append($toolbarElement.clone().append($btnFontColor));
+            }
+
+            /* background colors */
+            if (settings.backgroundColor === true) {
+                $toolbarList.append($toolbarElement.clone().append($btnBackgroundColor));
             }
 
             /* uploads */
@@ -630,20 +670,22 @@
             $inputElement.replaceWith($editor);
 
             // append bottom toolbar
-            $editor.append(
-                $('<div />', {class: 'richText-toolbar'})
-                    .append($('<a />', {
-                        class: 'richText-undo is-disabled',
-                        html: '<span class="fa fa-undo"></span>',
-                        'title': settings.translations.undo
-                    }))
-                    .append($('<a />', {
-                        class: 'richText-redo is-disabled',
-                        html: '<span class="fa fa-repeat fa-redo"></span>',
-                        'title': settings.translations.redo
-                    }))
-                    .append($('<a />', {class: 'richText-help', html: '<span class="fa fa-question-circle"></span>'}))
-            );
+            $bottomToolbar = $('<div />', {class: 'richText-toolbar'});
+            if (!settings.preview) {
+                $bottomToolbar.append($('<a />', {
+                    class: 'richText-undo is-disabled',
+                    html: '<span class="fa fa-undo"></span>',
+                    'title': settings.translations.undo
+                }));
+                $bottomToolbar.append($('<a />', {
+                    class: 'richText-redo is-disabled',
+                    html: '<span class="fa fa-repeat fa-redo"></span>',
+                    'title': settings.translations.redo
+                }));
+            }
+
+            $bottomToolbar.append($('<a />', {class: 'richText-help', html: '<span class="fa fa-question-circle"></span>'}));
+            $editor.append($bottomToolbar);
 
             if (settings.maxlength > 0) {
                 // display max length in editor toolbar
@@ -652,13 +694,14 @@
                     class: 'richText-length',
                     text: '0/' + settings.maxlength
                 }));
+                updateMaxLength($editor.find('.richText-editor').attr('id'));
             }
 
             if (settings.height && settings.height > 0) {
                 // set custom editor height
                 $editor.children(".richText-editor, .richText-initial").css({
                     'min-height': settings.height + 'px',
-                    'height': settings.height + 'px'
+                    'height': settings.adaptiveHeight ? 'auto' : settings.height + 'px'
                 });
             } else if (settings.heightPercentage && settings.heightPercentage > 0) {
                 // set custom editor height in percentage
@@ -671,7 +714,11 @@
                 height -= parseInt($editor.find(".richText-editor").css("padding-bottom")); // remove paddings
                 $editor.children(".richText-editor, .richText-initial").css({
                     'min-height': height + 'px',
-                    'height': height + 'px'
+                    'height': settings.adaptiveHeight ? 'auto' : height + 'px'
+                });
+            } else if (settings.adaptiveHeight) {
+                $editor.children(".richText-editor, .richText-initial").css({
+                    'height': 'auto'
                 });
             }
 
@@ -732,7 +779,6 @@
             }
         });
 
-
         // Saving changes from editor to textarea
         settings.$editor.find('.richText-editor').on('input change blur keydown keyup', function (e) {
             if ((e.keyCode === 9 || e.keyCode === "9") && e.type === "keydown") {
@@ -771,7 +817,6 @@
                 'top': positionY,
                 'left': positionX
             });
-
 
             if ($target.prop("tagName") === "A") {
                 // edit URL
@@ -1415,6 +1460,8 @@
                     'editorID': editorID,
                     'anchor': $('#' + editorID).children('div')[0]
                 };
+            } else if (!savedSel.editorID && editorID) {
+                savedSel.editorID = editorID;
             }
 
             if (savedSel.editorID !== editorID) {
@@ -1670,7 +1717,7 @@
             }
             var color;
             var maxLength = parseInt($editor.data('maxlength'));
-            var content = $editorInner.text();
+            var content = settings.maxlengthIncludeHTML ? $editorInner.html() : $editorInner.text();
             var percentage = (content.length / maxLength) * 100;
             if (percentage > 99) {
                 color = 'red';

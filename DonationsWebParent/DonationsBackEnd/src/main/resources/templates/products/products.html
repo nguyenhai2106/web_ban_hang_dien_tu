@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head
-	th:replace="~{fragments :: page_head('Products - Donations Admin')}" />
+	th:replace="~{fragments :: page_head('Products - Donations Admin', 'none')}" />
 </head>
 <body>
 	<div class="container-fluid">
@@ -51,13 +51,13 @@
 					<tr th:each="product : ${listProducts}">
 						<td class="text-center align-middle">[[${product.getId()}]]</td>
 						<td class="text-center align-middle">
-							<img alt="Product Main Image" src="/images/default-image.png" class="img-fluid border">
+							<img alt="Product Main Image" th:src="@{/images/default-image.png}" class="img-fluid border">
 						</td>
-						<td class="align-middle" style="text-align: justify; width: 55%">[[${product.getName()}]]</td>
+						<td class="align-middle" style="width: 55%">[[${product.getName()}]]</td>
 						<td class="align-middle text-center">[[${product.getBrand().getName()}]]</td>
 						<td class="align-middle text-center">[[${product.getCategory()}]]</td>
 						<td class="text-center align-middle">
-							<div th:replace="~{fragments :: status(${product.enabled}, 'Product', '/products/' + ${product.id})}"></div>
+							<div th:replace="~{fragments :: status(${product.enabled}, 'product', '/products/' + ${product.id})}"></div>
 						</td>
 						<td class="text-center align-middle" style="width: 8%;">
 							<a th:href="@{'/products/detail/' + ${product.id}}" title="View this product" class="pe-2">
@@ -86,7 +86,7 @@
 					<tr th:each="product : ${listProducts}">
 						<td class="text-center align-middle"  style="width: 30%"><i
 							class="fa fa-image fa-3x icon-silver" aria-hidden="true"></i> 
-							<img alt="Product Main Image" src="/images/default-image.png" class="img-fluid border">
+							<img alt="Product Main Image" th:src="@{/images/default-image.png}" class="img-fluid border">
 						</td>
 						<td class="align-middle">
 							<div>[[${product.getName()}]]</div>

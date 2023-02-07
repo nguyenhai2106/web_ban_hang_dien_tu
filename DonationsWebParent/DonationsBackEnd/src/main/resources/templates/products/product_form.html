@@ -1,24 +1,29 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{fragments :: page_head('Category Form')}" />
+<head>
+<head th:replace="~{fragments :: page_head('Product Form', 'tag')}" />
+<link rel="stylesheet" th:href="@{/richtext/richtext.min.css}" />
+<script th:src="@{/richtext/jquery.richtext.min.js}"></script>
+</head>
 <body>
 	<div class="container-fluid">
 		<div th:replace="~{navigation :: navigationMenu}"></div>
-		<div align="center" class="my-5">
+		<div align="center" class="my-4">
 			<h3>Manage Products | [[${pageTitle}]]</h3>
 		</div>
 		<div class="container">
-			<form th:action="@{/products/save}" method="post"
-				style="margin: 0 auto;" th:object="${product}">
+			<form th:action="@{/products/save}" method="post" enctype="multipart/form-data"
+				onsubmit="return checkUnique(this)" style="margin: 0 auto;"
+				th:object="${product}">
 				<input type="hidden" th:field="*{id}">
 				<!-- Nav tabs -->
 				<ul class="nav nav-tabs" id="myTab" role="tablist">
+					<li class="nav-item" role="presentation"><a class="nav-link active"
+						data-bs-toggle="tab" href="#overview" data-bs-target="#overview"
+						type="button" role="tab">Overview</a></li>
 					<li class="nav-item" role="presentation"><a
-						class="nav-link active" data-bs-toggle="tab" href="#overview"
-						data-bs-target="#overview" type="button" role="tab">Overview</a></li>
-					<li class="nav-item" role="presentation"><a class="nav-link"
-						data-bs-toggle="tab" href="#description"
+						class="nav-link" data-bs-toggle="tab" href="#description"
 						data-bs-target="#description" type="button" role="tab">Description</a>
 					</li>
 					<li class="nav-item" role="presentation"><a class="nav-link"
@@ -27,6 +32,9 @@
 					<li class="nav-item" role="presentation"><a class="nav-link"
 						data-bs-toggle="tab" href="#details" data-bs-target="#details"
 						type="button" role="tab">Details</a></li>
+					<li class="nav-item" role="presentation"><a class="nav-link"
+						data-bs-toggle="tab" href="#shipping" data-bs-target="#shipping"
+						type="button" role="tab">Shipping</a></li>
 				</ul>
 
 				<!-- Tab panes -->
@@ -34,9 +42,19 @@
 					<div class="tab-pane active p-3" id="overview" role="tabpanel">
 						<div th:replace="~{products/product_overview :: content}"></div>
 					</div>
-					<div class="tab-pane" id="description" role="tabpanel">Description</div>
+					<div class="tab-pane" id="description" role="tabpanel">
+						<div th:replace="~{products/product_description :: content}"></div>
+					</div>
 					<div class="tab-pane" id="images" role="tabpanel">Images</div>
 					<div class="tab-pane" id="details" role="tabpanel">Details</div>
+					<div class="tab-pane" id="shipping" role="tabpanel">
+						<div th:replace="~{products/product_shipping :: content}"></div>
+					</div>
+				</div>
+				<div class="my-4 text-center">
+					<input type="submit" value="Save" class="btn btn-primary me-2" />
+					<input type="button" value="Cancel" class="btn btn-secondary"
+						id="buttonCancel" />
 				</div>
 			</form>
 		</div>
@@ -50,6 +68,8 @@
 		dropdownCategories = $("#category");
 
 		$(document).ready(function() {
+			$("#shortDescription").richText();
+			$("#fullDescription").richText();
 			dropdownBrands.change(function() {
 				dropdownCategories.empty();
 				getCategories();
@@ -61,9 +81,35 @@
 			url = brandModuleURL + "/" + brandId + "/categories";
 			$.get(url, function(responseJson) {
 				$.each(responseJson, function(index, category) {
-					$("<option>").val(category.id).text(category.name).appendTo(dropdownCategories);
+					$("<option>").val(category.id).text(category.name)
+							.appendTo(dropdownCategories);
 				});
 			});
+		}
+		function checkUnique(form) {
+			productId = $("#id").val();
+			productName = $("#name").val();
+			csrfValue = $("input[name='_csrf']").val();
+			
+			url = "[[@{/products/check_unique}]]";
+			params = {
+				id : productId,
+				name : productName,
+				_csrf : csrfValue
+			};
+			$.post(url, params, function(response) {
+				if (response == "OK") {
+					form.submit();
+				} else if (response == "Duplicate") {
+					showWarningModal("There is another product having same name " + productName);	
+				} else {
+					showErrorModal("Unknown response from server");
+				}
+				
+			}).fail(function() {
+				showErrorModal("Could not connect to the server");
+			});
+			return false;
 		}
 	</script>
 	<script type="text/javascript" th:src="@{/js/common_form.js}"></script>

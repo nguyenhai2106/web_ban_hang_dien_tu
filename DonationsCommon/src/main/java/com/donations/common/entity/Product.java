@@ -48,13 +48,13 @@ public class Product {
 	private String alias;
 
 	@Nationalized
-	@Column(length = 512, nullable = false, name = "short_description")
+	@Column(length = 4096, nullable = false, name = "short_description")
 	private String shortDescription;
 
 	@Nationalized
-	@Column(length = 4096, nullable = false, name = "full_description")
+	@Column(length = 8192, nullable = false, name = "full_description")
 	private String fullDescription;
-
+ 
 	@Column(name = "created_time", nullable = false, updatable = false)
 	private Date createTime;
 

@@ -149,10 +149,10 @@ public class UserController {
 		String status = enabled ? "Enabled" : "Disabled";
 		String message = "The user ID " + id + " has been " + status;
 		redirectAttributes.addFlashAttribute("message", message);
-		redirectAttributes.addFlashAttribute("keyword", keyword);
 		if (keyword == null || keyword.isEmpty() || keyword.equals("null")) {
 			keyword = "";
 		}
+		redirectAttributes.addFlashAttribute("keyword", keyword);
 		return "redirect:/users/page/" + pageNum + "?sortField=" + sortField + "&sortDir=" + sortDir + "&keyword="
 		+ keyword;
 
