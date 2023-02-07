@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head
+	th:replace="~{fragments :: page_head('Products - Donations Admin')}" />
+</head>
+<body>
+	<div class="container-fluid">
+		<div th:replace="~{navigation :: navigationMenu}"></div>
+		<div class="container mt-2">
+			<div class="my-2">
+				<h2 align="center">Manage Products</h2>
+				<div class="d-none d-sm-block text-center">
+					<a class="btn btn-primary mb-2" th:href="@{/products/new}">Create
+						New Product</a> <a class="btn btn-secondary mb-2"
+						th:href="@{/products/export/csv}">Export To CSV</a>
+				</div>
+				<div class="d-md-none d-lg-none text-center">
+					<a class="mb-2 fas fa-folder-plus icon-dark fa-2x me-3"
+						th:href="@{/products/new}"></a> <a
+						class="mb-2 fas fa-file-csv fa-2x icon-dark me-3"
+						th:href="@{/products/export/csv}"></a>
+				</div>
+			</div>
+			<div th:if="${message != null}"
+				class="alert alert-success alert-dismissible fade show col-8 mx-auto text-center"
+				role="alert">
+				[[${message}]]
+				<button type="button" class="btn-close" data-bs-dismiss="alert"
+					aria-label="Close"></button>
+			</div>
+		</div>
+
+		<div th:replace="~{fragments :: search_form('/products/page/1')}"></div>
+
+		<div class="container d-none d-sm-block">
+			<table
+				class="table table-bordered table-striped table-hover table-responsive-xl">
+				<thead class="table-dark">
+					<tr>
+						<th class="text-center align-middle">ID</th>
+						<th class="text-center align-middle">Product Image</th>
+						<th class="text-center align-middle">Product Name</th>
+						<th class="text-center align-middle">Brand</th>
+						<th class="text-center align-middle">Category</th>
+						<th class="text-center align-middle">Enabled</th>
+						<th class="text-center">&nbsp;</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="product : ${listProducts}">
+						<td class="text-center align-middle">[[${product.getId()}]]</td>
+						<td class="text-center align-middle">
+							<img alt="Product Main Image" src="/images/default-image.png" class="img-fluid border">
+						</td>
+						<td class="align-middle" style="text-align: justify; width: 55%">[[${product.getName()}]]</td>
+						<td class="align-middle text-center">[[${product.getBrand().getName()}]]</td>
+						<td class="align-middle text-center">[[${product.getCategory()}]]</td>
+						<td class="text-center align-middle">
+							<div th:replace="~{fragments :: status(${product.enabled}, 'Product', '/products/' + ${product.id})}"></div>
+						</td>
+						<td class="text-center align-middle" style="width: 8%;">
+							<a th:href="@{'/products/detail/' + ${product.id}}" title="View this product" class="pe-2">
+								<i class="fas fa-file-alt text-primary" aria-hidden="true"></i>
+							</a>
+							<a
+							th:href="@{'/products/edit/' + ${product.id}}"
+							class="pe-2 text-decoration-none" title="Edit this product"><i
+								class="fa fa-edit text-primary" aria-hidden="true"></i></a> 
+							
+							<a
+							th:href="@{'/productss/delete/' + ${product.id}}"
+							class="text-danger text-decoration-none link-delete"
+							title="Delete this product" th:productId="${product.id}"><i
+								class="fa fa-trash" aria-hidden="true"></i></a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+		
+		<!-- Responsive SM -->
+		<div class="container d-block d-sm-none">
+			<table class="table table-bordered table-striped table-responsive-xl">
+				<tbody>
+					<tr th:each="product : ${listProducts}">
+						<td class="text-center align-middle"  style="width: 30%"><i
+							class="fa fa-image fa-3x icon-silver" aria-hidden="true"></i> 
+							<img alt="Product Main Image" src="/images/default-image.png" class="img-fluid border">
+						</td>
+						<td class="align-middle">
+							<div>[[${product.getName()}]]</div>
+						</td>
+						<td class="text-center align-middle" style="width: 30%">
+							<a
+							th:href="@{'/products/edit/' + ${product.id}}"
+							class="pe-2 text-decoration-none" title="Edit this user"><i
+								class="fa fa-edit text-primary" aria-hidden="true"></i></a> 
+							
+							<a
+							th:href="@{'/products/delete/' + ${product.id}}"
+							class="text-danger text-decoration-none link-delete"
+							title="Delete this user" th:productId="${product.id}"><i
+								class="fa fa-trash" aria-hidden="true"></i></a>
+						</td>
+
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+		<div class="modal fade text-center" id="confirmModal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Delete Confirmation</h4>
+						<button type="button" class="close" data-bs-dismiss="modal"
+							aria-label="Close">&times;</button>
+					</div>
+
+					<div class="modal-body">
+						<span id="confirmText"></span>
+					</div>
+
+					<div class="modal-footer">
+						<a class="btn btn-primary text-decoration-none" href=""
+							id="yesButton">Yes</a>
+						<button type="button" class="btn btn-danger"
+							data-bs-dismiss="modal">No</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:replace="~{fragments :: pagination('products', 'products')}"></div>
+		<div th:replace="~{fragments :: footer}"></div>
+	</div>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+		crossorigin="anonymous"></script>
+	<script type="text/javascript">
+		$(document).ready(
+				function() {
+					$(".link-delete")
+							.on(
+									"click",
+									function(e) {
+										e.preventDefault();
+										link = $(this);
+										productId = link.attr("productId");
+										$("#yesButton").attr("href",
+												link.attr("href"));
+										$("#confirmText").text(
+												"Are you sure want to delete this product ID "
+														+ productId + "?");
+										$("#confirmModal").modal("show");
+									});
+				});
+		function clearFilter() {
+			window.location = "[[@{/products}]]"
+		}
+	</script>
+</body>
+</html>

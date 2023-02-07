@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments :: page_head('Category Form')}" />
+<body>
+	<div class="container-fluid">
+		<div th:replace="~{navigation :: navigationMenu}"></div>
+		<div align="center" class="my-5">
+			<h3>Manage Products | [[${pageTitle}]]</h3>
+		</div>
+		<div class="container">
+			<form th:action="@{/products/save}" method="post"
+				style="margin: 0 auto;" th:object="${product}">
+				<input type="hidden" th:field="*{id}">
+				<!-- Nav tabs -->
+				<ul class="nav nav-tabs" id="myTab" role="tablist">
+					<li class="nav-item" role="presentation"><a
+						class="nav-link active" data-bs-toggle="tab" href="#overview"
+						data-bs-target="#overview" type="button" role="tab">Overview</a></li>
+					<li class="nav-item" role="presentation"><a class="nav-link"
+						data-bs-toggle="tab" href="#description"
+						data-bs-target="#description" type="button" role="tab">Description</a>
+					</li>
+					<li class="nav-item" role="presentation"><a class="nav-link"
+						data-bs-toggle="tab" href="#images" data-bs-target="#images"
+						type="button" role="tab">Images</a></li>
+					<li class="nav-item" role="presentation"><a class="nav-link"
+						data-bs-toggle="tab" href="#details" data-bs-target="#details"
+						type="button" role="tab">Details</a></li>
+				</ul>
+
+				<!-- Tab panes -->
+				<div class="tab-content">
+					<div class="tab-pane active p-3" id="overview" role="tabpanel">
+						<div th:replace="~{products/product_overview :: content}"></div>
+					</div>
+					<div class="tab-pane" id="description" role="tabpanel">Description</div>
+					<div class="tab-pane" id="images" role="tabpanel">Images</div>
+					<div class="tab-pane" id="details" role="tabpanel">Details</div>
+				</div>
+			</form>
+		</div>
+		<div th:replace="~{modal_fragments :: modal_dialog}"></div>
+		<div th:replace="~{fragments :: footer}"></div>
+	</div>
+	<script type="text/javascript">
+		moduleURL = "[[@{/products}]]";
+		brandModuleURL = "[[@{/brands}]]";
+		dropdownBrands = $("#brand");
+		dropdownCategories = $("#category");
+
+		$(document).ready(function() {
+			dropdownBrands.change(function() {
+				dropdownCategories.empty();
+				getCategories();
+			});
+			getCategories();
+		})
+		function getCategories() {
+			brandId = dropdownBrands.val();
+			url = brandModuleURL + "/" + brandId + "/categories";
+			$.get(url, function(responseJson) {
+				$.each(responseJson, function(index, category) {
+					$("<option>").val(category.id).text(category.name).appendTo(dropdownCategories);
+				});
+			});
+		}
+	</script>
+	<script type="text/javascript" th:src="@{/js/common_form.js}"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+		crossorigin="anonymous"></script>
+</body>
+</html>

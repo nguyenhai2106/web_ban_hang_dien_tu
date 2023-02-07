@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments :: page_head('Category Form')}" />
+<body>
+	<div class="container-fluid">
+		<div th:replace="~{navigation :: navigationMenu}"></div>
+		<div align="center" class="my-5">
+			<h3>Manage Brands | [[${pageTitle}]]</h3>
+		</div>
+
+		<form th:action="@{/brands/save}" method="post"
+			onsubmit="return checkUnique(this)"
+			style="max-width: 600px; margin: 0 auto;" th:object="${brand}"
+			enctype="multipart/form-data">
+			<input type="hidden" th:field="*{id}">
+			<div class="border border-secondary rounded p-4 pe-0">
+				<h3 class="text-center mb-3 text-primary">[[${pageTilte}]]</h3>
+				<div class="input-group mb-3 row">
+					<label class="col-sm-3 col-form-label">Brand Name</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" th:field="*{name}"
+							required="required" maxlength="64" minlength="2" />
+					</div>
+				</div>
+				<div class="input-group mb-3 row">
+					<label class="col-sm-3 form-check-label">Select Category</label>
+					<div class="col-sm-9">
+						<select class="form-select" th:field="*{categories}"
+							multiple="multiple" required="required"
+							style="resize: vertical; height: 200px;">
+							<th:block th:each="category : ${categories}">
+								<option th:value="${category.id}">[[${category.getName()}]]</option>
+							</th:block>
+						</select>
+					</div>
+				</div>
+				<div class="mb-3 form-group row align-items-center">
+					<label class="col-sm-3 col-form-label">Chosen Categories</label>
+					<div class="col-sm-9" id="chosenCategories"></div>
+				</div>
+				<div class="input-group mb-3 row align-items-center">
+					<label class="col-3 col-sm-3 col-form-label mt-2" for="fileImage">Brand
+						Logo</label>
+					<div class="col-9 col-sm-5 mt-2">
+						<input type="hidden" th:field="*{logo}" /> <input type="file"
+							class="form-control" id="fileImage"
+							th:required="${brand.id == null}" accept="image/png, image/jpeg"
+							name="imageBrand" />
+					</div>
+					<div class="col-12 col-sm-4 align-center">
+						<img alt="Image prevssssiews" id="thumbnail" width="150"
+							th:src="@{${brand.getLogoPath()}}"
+							class="mx-auto d-block img-fluid rounded mt-2" />
+					</div>
+				</div>
+				<div class="mt-2 text-center">
+					<input type="submit" value="Save" class="btn btn-primary me-2" />
+					<input type="button" value="Cancel" class="btn btn-secondary"
+						id="buttonCancel" />
+				</div>
+			</div>
+		</form>
+
+		<div th:replace="~{modal_fragments :: modal_dialog}"></div>
+		<div th:replace="~{fragments :: footer}"></div>
+	</div>
+	<script type="text/javascript">
+		moduleURL = "[[@{/brands}]]";
+		$(document).ready(function() {
+			dropdownCategories = $("#categories");
+			chosenCategories = $("#chosenCategories");
+			dropdownCategories.change(function() {
+				chosenCategories.empty();
+				showChosenCategories();
+			});
+			showChosenCategories();
+		});
+		function showChosenCategories() {
+			dropdownCategories
+					.children("option:selected")
+					.each(
+							function() {
+								selectedCategory = $(this);
+								categoryId = selectedCategory.val();
+								categoryName = selectedCategory.text().replace(
+										/-/g, "");
+								chosenCategories
+										.append("<div class='badge bg-primary p-2 me-2 mb-1'>"
+												+ categoryName + "</div>");
+							});
+		}
+
+		function checkUnique(form) {
+			brandId = $("#id").val();
+			brandName = $("#name").val();
+
+			csrfValue = $("input[name='_csrf']").val();
+
+			url = "[[@{/brands/check_unique}]]";
+
+			params = {
+				id : brandId,
+				name : brandName,
+				_csrf : csrfValue
+			};
+
+			$
+					.post(
+							url,
+							params,
+							function(response) {
+								if (response == "OK") {
+									form.submit();
+								} else if (response == "Duplicated") {
+									showWarningModal("There is another brand having same name "
+											+ brandName);
+								} else {
+									showErrorModal("Unknown response from server");
+								}
+
+							}).fail(function() {
+						showErrorModal("Could not connect to the server");
+					});
+
+			return false;
+		}
+	</script>
+	<script type="text/javascript" th:src="@{/js/common_form.js}"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+		crossorigin="anonymous"></script>
+</body>
+</html>

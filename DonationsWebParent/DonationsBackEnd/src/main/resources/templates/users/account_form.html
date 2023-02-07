@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments :: page_head('Your Account Details')" />
+<body>
+	<div class="container-fluid">
+		<div th:replace="navigation :: navigationMenu"></div>
+		<div align="center" class="mt-2 container">
+			<h3>Your Account Details</h3>
+			<div th:if="${message != null}" id="messageAlert"
+				class="alert alert-success alert-dismissible fade show col-8 mx-auto text-center"
+				role="alert">
+				[[${message}]]
+				<button type="button" class="btn-close" data-bs-dismiss="alert"
+					aria-label="Close"></button>
+			</div>
+			<div id="conpasscheck"
+				class="alert alert-danger alert-dismissible fade show col-6 mx-auto text-center"
+				role="alert">
+				Password Do Not Match!
+				<button type="button" class="btn-close" data-bs-dismiss="alert"
+					aria-label="Close"></button>
+			</div>
+		</div>
+
+		<form th:action="@{/account/update}" method="post"
+			style="max-width: 800px; margin: 0 auto;" th:object="${user}"
+			onsubmit="return validateConfirmPassword();"
+			enctype="multipart/form-data">
+			<input type="hidden" th:field="*{id}">
+			<div class="border border-secondary rounded p-4 pe-0">
+				<h3 class="text-center mb-3 text-primary">[[${pageTilte}]]</h3>
+				<div class="input-group mb-3 row">
+					<label class="col-sm-3 col-form-label">Email</label>
+					<div class="col-sm-9">
+						<input type="email" class="form-control" th:field="*{email}"
+							readonly="readonly" />
+					</div>
+				</div>
+				<div class="input-group mb-3 row">
+					<label class="col-sm-3 col-form-label">First Name</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" th:field="*{firstName}"
+							required="required" maxlength="64" minlength="2" />
+					</div>
+				</div>
+				<div class="input-group mb-3 row">
+					<label class="col-sm-3 col-form-label">Last Name</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" th:field="*{lastName}"
+							required="required" maxlength="64" minlength="2" />
+					</div>
+				</div>
+				<div class="input-group mb-3 row">
+					<label class="col-sm-3 col-form-label">Password</label>
+					<div class="col-sm-9">
+						<input type="password" th:field="*{password}" class="form-control"
+							maxlength="64" minlength="8"
+							placeholder="Leave blank if you don't want to change password" />
+					</div>
+				</div>
+				<div class="input-group mb-3 row">
+					<label class="col-sm-3 col-form-label">Confirm Password</label>
+					<div class="col-sm-9">
+						<input type="password" id="confirmPassword" maxlength="64"
+							minlength="8" class="form-control" placeholder="Confirm password"
+							oninput="validateConfirmPassword()"/>
+					</div>
+				</div>
+				<div class="input-group mb-3 row">
+					<label class="col-sm-3 form-check-label">Assigned Roles</label>
+					<div class="col-sm-9">
+						<span>[[${user.roles}]]</span>
+					</div>
+				</div>
+				<div class="input-group mb-3 row align-items-center">
+					<label class="col-3 col-sm-3 col-form-label" for="fileImage">Photos</label>
+					<div class="col-9 col-sm-5">
+						<input type="hidden" th:field="*{photos}" /> <input type="file"
+							class="form-control" id="fileImage"
+							accept="image/png, image/jpeg" name="image" />
+					</div>
+					<div class="col-12 col-sm-4 mt-3 align-center">
+						<img alt="Photos previews" id="thumbnail"
+							th:src="@{${user.photosImagePath}}" width="150"
+							class="mx-auto d-block img-fluid rounded" />
+					</div>
+				</div>
+				<div class="mt-2 text-center">
+					<input id="buttonSubmit" value="Save" class="btn btn-primary me-2" type="submit"/>
+					<input type="button" value="Cancel" class="btn btn-secondary"
+						id="buttonCancel" />
+				</div>
+			</div>
+		</form>
+		<span id="CheckPasswordMatch"></span>
+		<div class="modal fade text-center" id="modalDialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="modalTitle">Warning</h4>
+						<button type="button" class="close" data-bs-dismiss="modal"
+							aria-label="Close">&times;</button>
+					</div>
+
+					<div class="modal-body">
+						<span id="modalBody"></span>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger"
+							data-bs-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:replace="fragments :: footer"></div>
+	</div>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+		crossorigin="anonymous"></script>
+		
+	<script type="text/javascript">
+		moduleURL = "[[@{/}]]";
+		$("#conpasscheck").hide();
+		
+		$("#messageAlert").fadeOut(2000);
+		
+		function validateConfirmPassword() {
+			let confirmPassword = $("#confirmPassword").val();
+			let password = $("#password").val();
+			if(confirmPassword != password) {
+				$("#conpasscheck").show();
+				return false;
+			} else {
+				$("#conpasscheck").hide();
+				return true;
+			}
+		}
+	</script>
+	<script type="text/javascript" th:src="@{/js/common_form.js}"></script>
+	
+</body>
+</html>
