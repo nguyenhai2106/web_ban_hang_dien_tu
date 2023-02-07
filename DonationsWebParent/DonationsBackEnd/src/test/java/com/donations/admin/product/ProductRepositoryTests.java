@@ -34,8 +34,7 @@ public class ProductRepositoryTests {
 		Category category = entityManager.find(Category.class, 17);
 
 		Product product = new Product();
-		product.setName(
-				"Surface Laptop Go (THH-00035)(i5 1035G1/8GB RAM/128GB SSD/12.4 Cảm ứng/Win 10/Vàng)");
+		product.setName("Surface Laptop Go (THH-00035)(i5 1035G1/8GB RAM/128GB SSD/12.4 Cảm ứng/Win 10/Vàng)");
 		product.setShortDescription(
 				"Surface Laptop Go (THH-00035)(i5 1035G1/8GB RAM/128GB SSD/12.4 Cảm ứng/Win 10/Vàng)");
 		product.setFullDescription(
@@ -74,6 +73,20 @@ public class ProductRepositoryTests {
 		System.out.println(updatedProduct.getPrice());
 		assertThat(updatedProduct.getPrice()).isEqualTo(39000000);
 
+	}
+
+	@Test
+	public void testSaveProductWithImages() {
+		Integer productId = 1;
+		Product product = repository.findById(productId).get();
+		product.setMainImage("main-image.png");
+		product.addExtraImage("extra-image-0.jpg");
+		product.addExtraImage("extra-image-1.jpg");
+		product.addExtraImage("extra-image-2.jpg");
+		Product savedProduct = repository.save(product);
+		System.out.println(savedProduct.getMainImage());
+		assertThat(savedProduct.getMainImage()).isEqualTo("main-image.png");
+		assertThat(savedProduct.getImages().size()).isEqualTo(3);
 	}
 
 }

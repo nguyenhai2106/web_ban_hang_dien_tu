@@ -32,7 +32,7 @@ public class Product {
 	private String name;
 
 	public Product() {
-		
+
 	}
 
 	public Integer getId() {
@@ -54,7 +54,7 @@ public class Product {
 	@Nationalized
 	@Column(length = 8192, nullable = false, name = "full_description")
 	private String fullDescription;
- 
+
 	@Column(name = "created_time", nullable = false, updatable = false)
 	private Date createTime;
 
@@ -89,8 +89,8 @@ public class Product {
 	@Column(columnDefinition = "float default 0")
 	private float weight;
 
-//	@Column(name = "main_image", nullable = false)
-//	private String mainImage;
+	@Column(name = "main_image", nullable = false, columnDefinition = "nvarchar(1024) default 'default-images.png'")
+	private String mainImage;
 
 	@ManyToOne
 	@JoinColumn(name = "category_id")
@@ -99,6 +99,9 @@ public class Product {
 	@ManyToOne
 	@JoinColumn(name = "brand_id")
 	private Brand brand;
+
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+	private Set<ProductImage> images = new HashSet<>();
 
 	public String getName() {
 		return name;
@@ -120,7 +123,7 @@ public class Product {
 		return shortDescription;
 	}
 
-	public void setShortDescription(String shortDescription) { 
+	public void setShortDescription(String shortDescription) {
 		this.shortDescription = shortDescription;
 	}
 
@@ -220,13 +223,13 @@ public class Product {
 		this.weight = weight;
 	}
 
-//	public String getMainImage() {
-//		return mainImage;
-//	}
-//
-//	public void setMainImage(String mainImage) {
-//		this.mainImage = mainImage;
-//	}
+	public String getMainImage() {
+		return mainImage;
+	}
+
+	public void setMainImage(String mainImage) {
+		this.mainImage = mainImage;
+	}
 
 	public Category getCategory() {
 		return category;
@@ -238,7 +241,7 @@ public class Product {
 
 	public Brand getBrand() {
 		return brand;
-	} 
+	}
 
 	public void setBrand(Brand brand) {
 		this.brand = brand;
@@ -250,10 +253,16 @@ public class Product {
 				+ category + ", brand = " + brand + "]";
 	}
 
-//	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-//	private Set<ProductImage> images = new HashSet<>();
-//	
-//	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-//	private List<ProductDetails> details = new ArrayList<>();
+	public Set<ProductImage> getImages() {
+		return images;
+	}
+
+	public void setImages(Set<ProductImage> images) {
+		this.images = images;
+	}
+
+	public void addExtraImage(String imageName) {
+		this.images.add(new ProductImage(imageName, this));
+	}
 
 }

@@ -52,4 +52,12 @@ public class ProductService {
 	public void updateProductEnabledStatus(Integer id, boolean enabled) {
 		repository.updateEnabledStatus(id, enabled);
 	}
+
+	public void delete(Integer id) throws ProductNotFoundException {
+		Long countById = repository.countById(id);
+		if (countById == null || countById == 0) {
+			throw new ProductNotFoundException("Could not find any product with ID " + id);
+		}
+		repository.deleteById(id);
+	}
 }

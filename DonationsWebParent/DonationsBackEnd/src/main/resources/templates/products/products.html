@@ -50,26 +50,24 @@
 				<tbody>
 					<tr th:each="product : ${listProducts}">
 						<td class="text-center align-middle">[[${product.getId()}]]</td>
-						<td class="text-center align-middle">
-							<img alt="Product Main Image" th:src="@{/images/default-image.png}" class="img-fluid border">
-						</td>
+						<td class="text-center align-middle"><img
+							alt="Product Main Image" th:src="@{/images/default-image.png}"
+							class="img-fluid border"></td>
 						<td class="align-middle" style="width: 55%">[[${product.getName()}]]</td>
 						<td class="align-middle text-center">[[${product.getBrand().getName()}]]</td>
 						<td class="align-middle text-center">[[${product.getCategory()}]]</td>
 						<td class="text-center align-middle">
-							<div th:replace="~{fragments :: status(${product.enabled}, 'product', '/products/' + ${product.id})}"></div>
+							<div
+								th:replace="~{fragments :: status(${product.enabled}, 'product', '/products/' + ${product.id})}"></div>
 						</td>
-						<td class="text-center align-middle" style="width: 8%;">
-							<a th:href="@{'/products/detail/' + ${product.id}}" title="View this product" class="pe-2">
-								<i class="fas fa-file-alt text-primary" aria-hidden="true"></i>
-							</a>
-							<a
-							th:href="@{'/products/edit/' + ${product.id}}"
+						<td class="text-center align-middle" style="width: 8%;"><a
+							th:href="@{'/products/detail/' + ${product.id}}"
+							title="View this product" class="pe-2"> <i
+								class="fas fa-file-alt text-primary" aria-hidden="true"></i>
+						</a> <a th:href="@{'/products/edit/' + ${product.id}}"
 							class="pe-2 text-decoration-none" title="Edit this product"><i
-								class="fa fa-edit text-primary" aria-hidden="true"></i></a> 
-							
-							<a
-							th:href="@{'/productss/delete/' + ${product.id}}"
+								class="fa fa-edit text-primary" aria-hidden="true"></i></a> <a
+							th:href="@{'/products/delete/' + ${product.id}}"
 							class="text-danger text-decoration-none link-delete"
 							title="Delete this product" th:productId="${product.id}"><i
 								class="fa fa-trash" aria-hidden="true"></i></a></td>
@@ -77,38 +75,34 @@
 				</tbody>
 			</table>
 		</div>
-		
-		
+
+
 		<!-- Responsive SM -->
 		<div class="container d-block d-sm-none">
 			<table class="table table-bordered table-striped table-responsive-xl">
 				<tbody>
 					<tr th:each="product : ${listProducts}">
-						<td class="text-center align-middle"  style="width: 30%"><i
-							class="fa fa-image fa-3x icon-silver" aria-hidden="true"></i> 
-							<img alt="Product Main Image" th:src="@{/images/default-image.png}" class="img-fluid border">
-						</td>
+						<td class="text-center align-middle" style="width: 30%"><i
+							class="fa fa-image fa-3x icon-silver" aria-hidden="true"></i> <img
+							alt="Product Main Image" th:src="@{/images/default-image.png}"
+							class="img-fluid border"></td>
 						<td class="align-middle">
 							<div>[[${product.getName()}]]</div>
 						</td>
-						<td class="text-center align-middle" style="width: 30%">
-							<a
+						<td class="text-center align-middle" style="width: 30%"><a
 							th:href="@{'/products/edit/' + ${product.id}}"
 							class="pe-2 text-decoration-none" title="Edit this user"><i
-								class="fa fa-edit text-primary" aria-hidden="true"></i></a> 
-							
-							<a
+								class="fa fa-edit text-primary" aria-hidden="true"></i></a> <a
 							th:href="@{'/products/delete/' + ${product.id}}"
 							class="text-danger text-decoration-none link-delete"
 							title="Delete this user" th:productId="${product.id}"><i
-								class="fa fa-trash" aria-hidden="true"></i></a>
-						</td>
+								class="fa fa-trash" aria-hidden="true"></i></a></td>
 
 					</tr>
 				</tbody>
 			</table>
 		</div>
-		
+
 		<div class="modal fade text-center" id="confirmModal">
 			<div class="modal-dialog">
 				<div class="modal-content">

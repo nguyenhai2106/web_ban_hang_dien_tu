@@ -62,12 +62,23 @@ public class ProductController {
 			throws ProductNotFoundException {
 		productService.updateProductEnabledStatus(id, enabled);
 		String status = enabled ? "Enabled" : "Disabled";
-		String message = "This product ID " + id + " has been " + status;
+		String message = "This product ID " + id + " has been " + status + ".";
 		redirectAttributes.addFlashAttribute("message", message);
 		if (keyword == null || keyword.isEmpty() || keyword.equals("null")) {
 			keyword = "";
 		}
 		redirectAttributes.addFlashAttribute("keyword", keyword);
+		return "redirect:/products";
+	}
+
+	@GetMapping("/products/delete/{id}")
+	public String deleteProduct(@PathVariable(name = "id") Integer id, RedirectAttributes redirectAttributes) {
+		try {
+			productService.delete(id);
+			redirectAttributes.addFlashAttribute("message", "The product ID " + id + " has been deleted successfully");
+		} catch (ProductNotFoundException e) {
+			redirectAttributes.addFlashAttribute("message", e.getMessage());
+		}
 		return "redirect:/products";
 	}
 
