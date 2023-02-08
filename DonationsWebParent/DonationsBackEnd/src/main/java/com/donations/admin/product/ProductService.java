@@ -29,8 +29,8 @@ public class ProductService {
 		} else {
 			product.setAlias(product.getAlias().toLowerCase().replaceAll(" ", "_"));
 		}
-		Product savedProduct = repository.save(product);
 		product.setUpdateTimeDate(new Date());
+		Product savedProduct = repository.save(product);
 		return savedProduct;
 	}
 

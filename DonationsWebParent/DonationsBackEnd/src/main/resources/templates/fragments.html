@@ -39,7 +39,7 @@
 			<span>Showing [[${entityName}]] # [[${startCount}]] to
 				[[${endCount}]] of [[${totalItems}]]</span>
 		</div>
-		<div class="text-center mb-3" th:unless="${totalItems < 0}">
+		<div class="text-center mb-3" th:unless="${totalItems > 0}">
 			<span>No [[${entityName}]] found</span>
 		</div>
 

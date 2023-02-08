@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+	<div th:fragment="content" th:remove="tag">
+		<div class="container">
+			<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-2 g-lg-3">
+				<div class="col">
+					<div class="col my-3 border rounded p-3">
+						<div class="align-middle text-center">
+							<img alt="Main images previews" id="thumbnail"
+								th:src="@{${product.mainImagePath}}"
+								class="mx-auto d-block img-fluid" />
+						</div>
+						<div class="input-group mt-2">
+							<label
+								class="input-group-text text-primary bg-white border-end-0"
+								for="fileImage">Main Image</label> <input type="file"
+								class="form-control" id="fileImage" name="fileImage"
+								required="required" />
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>

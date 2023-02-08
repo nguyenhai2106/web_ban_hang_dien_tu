@@ -50,8 +50,8 @@
 				<tbody>
 					<tr th:each="product : ${listProducts}">
 						<td class="text-center align-middle">[[${product.getId()}]]</td>
-						<td class="text-center align-middle"><img
-							alt="Product Main Image" th:src="@{/images/default-image.png}"
+						<td class="text-center align-middle"><img width="120"
+							alt="Product Main Image" th:src="@{${product.getMainImagePath()}}"
 							class="img-fluid border"></td>
 						<td class="align-middle" style="width: 55%">[[${product.getName()}]]</td>
 						<td class="align-middle text-center">[[${product.getBrand().getName()}]]</td>

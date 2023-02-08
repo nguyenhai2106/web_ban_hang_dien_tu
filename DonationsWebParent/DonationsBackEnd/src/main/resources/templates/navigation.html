@@ -85,8 +85,11 @@
 						<li class="nav-item dropdown" style="padding-top: 1.2px"><a
 							class="btn dropdown-toggle border-0 align-middle ps-0"
 							th:href="@{/account}" role="button" id="dropdownMenuLink"
-							data-bs-toggle="dropdown" aria-expanded="false"><span
-								sec:authentication="principal.FullName"></span></a>
+							data-bs-toggle="dropdown" aria-expanded="false">
+								
+								<span sec:authentication="principal.FullName"></span>
+								
+								</a>
 							<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 								<li><a class="dropdown-item" href="" id="logoutLink">Log
 										Out</a></li>

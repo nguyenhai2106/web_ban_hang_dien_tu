@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{fragments :: page_head('User Form', 'none')}" />
 <body>
 	<div class="container-fluid">
@@ -8,8 +9,8 @@
 			<h3>Manage Users | [[${pageTitle}]]</h3>
 			<a class="btn btn-primary mb-2" th:href="@{/users/new}">Create
 				New User</a>
-		</div>		
-		
+		</div>
+
 		<form th:action="@{/users/save}" method="post"
 			style="max-width: 800px; margin: 0 auto;" th:object="${user}"
 			onsubmit="return checkEmailUnique(this);"
@@ -91,6 +92,7 @@
 		<div th:replace="~{fragments :: footer}"></div>
 	</div>
 	<script type="text/javascript">
+		MAX_FILE_SIZE = 102400;
 		moduleURL = "[[@{/users}]]";
 		function checkEmailUnique(form) {
 			url = "[[@{/users/check_email}]]";
@@ -102,21 +104,22 @@
 				email : userEmail,
 				_csrf : csrfValue
 			};
-			$.post(
-					url,
-					params,
-					function(response) {
-						if (response == "OK") {
-							form.submit();
-						} else if (response == "Duplicated") {
-							showWarningModal("There is another user having the email "
+			$
+					.post(
+							url,
+							params,
+							function(response) {
+								if (response == "OK") {
+									form.submit();
+								} else if (response == "Duplicated") {
+									showWarningModal("There is another user having the email "
 											+ userEmail);
-						} else {
-							showErrorModal("Unknown response from server")
-						}
-					}).fail(function() {
+								} else {
+									showErrorModal("Unknown response from server")
+								}
+							}).fail(function() {
 						showErrorModal("Could not connect to server")
-			});
+					});
 			return false;
 		}
 	</script>
