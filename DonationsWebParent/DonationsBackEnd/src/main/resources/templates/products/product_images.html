@@ -4,24 +4,80 @@
 <body>
 	<div th:fragment="content" th:remove="tag">
 		<div class="container">
-			<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-2 g-lg-3">
+			<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-2 g-lg-3"
+				id="divProductImages">
+				<!-- Main image -->
 				<div class="col">
-					<div class="col my-3 border rounded p-3">
+					<div class="col my-3 border rounded px-3 pb-3 pt-2">
+						<div>
+							<label class="text-primary" for="fileImage"
+								style="text-overflow: ellipsis; white-space: nowrap; width: 100%; overflow: hidden;">Main
+								Image: [[${product.mainImage}]]</label>
+						</div>
 						<div class="align-middle text-center">
 							<img alt="Main images previews" id="thumbnail"
 								th:src="@{${product.mainImagePath}}"
 								class="mx-auto d-block img-fluid" />
 						</div>
 						<div class="input-group mt-2">
-							<label
-								class="input-group-text text-primary bg-white border-end-0"
-								for="fileImage">Main Image</label> <input type="file"
-								class="form-control" id="fileImage" name="fileImage"
-								required="required" />
+							<input type="file" class="form-control" id="fileImage"
+								name="fileImage" th:required="${product.mainImage == null}" />
 						</div>
+						<input type="hidden" th:field="*{mainImage}" />
 					</div>
 				</div>
 
+				<!-- Extra images -->
+				<th:block th:each="extraImage, status : ${product.images}">
+					<div class="col" th:id="'divExtraImage' + ${status.index}">
+						<div class="col my-3 border rounded px-3 pb-3 pt-2">
+							<div class="align-middle"
+								th:id="'extraImageHeader' + ${status.index}">
+								<label class="text-primary align-middle"
+									th:for="'extraImage' +${status.index}"
+									style="text-overflow: ellipsis; white-space: nowrap; width: 90%; overflow: hidden;">Extra
+									Image #[[${status.index + 1}]]: [[${extraImage.name}]]</label> <a
+									name="linkRemoveExtraImage" style="float: right;"
+									class="btn fas fa-times-circle icon-dark pe-0"
+									title="Remove this image"></a>
+							</div>
+							<div class="align-middle text-center">
+								<img th:alt="'Extra image #' + ${status.index + 1} + ' preview'"
+									th:id="'extraThumbnail' + ${status.index}"
+									th:src="@{${extraImage.extraImagePath}}"
+									class="mx-auto d-block img-fluid" />
+							</div>
+							<div class="input-group mt-2">
+								<input type="file" class="form-control" name="extraImage" />
+							</div>
+							<input type="hidden" name="imageIDs"
+								th:id="'imageId' + ${status.index}" th:value="${extraImage.id}"/>
+							<input type="hidden" name="imageNames"
+								th:id="'imageName' + ${status.index}" th:value="${extraImage.name}"/>
+						</div>
+					</div>
+				</th:block>
+
+				<div class="col" th:id="'divExtraImage' + ${numberOfExtraImages}">
+					<div class="col my-3 border rounded px-3 pb-3 pt-2">
+						<div class="align-middle"
+							th:id="'extraImageHeader' + ${numberOfExtraImages}">
+							<label class="text-primary align-middle" for="extraImage"
+								style="text-overflow: ellipsis; white-space: nowrap; width: 90%; overflow: hidden;">Extra
+								Image #[[${numberOfExtraImages + 1}]]: </label>
+						</div>
+						<div class="align-middle text-center">
+							<img
+								th:alt="'Extra image #' + ${numberOfExtraImages + 1} + ' preview'"
+								th:id="'extraThumbnail' + ${numberOfExtraImages}"
+								th:src="@{/images/default-image.png}"
+								class="mx-auto d-block img-fluid" />
+						</div>
+						<div class="input-group mt-2">
+							<input type="file" class="form-control" name="extraImage" />
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

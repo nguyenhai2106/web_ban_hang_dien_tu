@@ -2,16 +2,23 @@ package com.donations.admin.product;
 
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.donations.common.entity.Brand;
 import com.donations.common.entity.Product;
 
 @Service
 @Transactional
 public class ProductService {
+	public static final int PRODUCTS_PER_PAGE = 5;
 	@Autowired
 	private ProductRepository repository;
 
@@ -59,5 +66,31 @@ public class ProductService {
 			throw new ProductNotFoundException("Could not find any product with ID " + id);
 		}
 		repository.deleteById(id);
+	}
+
+	public Product getById(Integer id) throws ProductNotFoundException {
+		try {
+			return repository.findById(id).get();
+		} catch (NoSuchElementException e) {
+			throw new ProductNotFoundException("Could not find any product with ID " + id);
+		}
+	}
+
+	public Page<Product> listByPage(int pageNum, String sortFied, String sortDir, String keyword, Integer categoryId) {
+		Sort sort = Sort.by(sortFied);
+		sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
+		Pageable pageable = PageRequest.of(pageNum - 1, PRODUCTS_PER_PAGE, sort);
+		if (keyword != null && !keyword.isEmpty()) {
+			if (categoryId != null && categoryId > 0) {
+				String categoryIdMatch = "-" + String.valueOf(categoryId) + "-";
+				return repository.searchWithCategory(categoryId, categoryIdMatch, keyword, pageable);
+			}
+			return repository.findAll(keyword, pageable);
+		}
+		if (categoryId != null && categoryId > 0) {
+			String categoryIdMatch = "-" + String.valueOf(categoryId) + "-";
+			return repository.findAllWithCategory(categoryId, categoryIdMatch, pageable);
+		}
+		return repository.findAll(pageable);
 	}
 }

@@ -74,9 +74,9 @@ public class CategoryService {
 		}
 
 		Pageable pageable = PageRequest.of(pageNum - 1, ROOT_CATEGORIES_PER_PAGE, sort);
-		
+
 		Page<Category> categoriesPage = null;
-		
+
 		if (keyword != null && !keyword.isEmpty()) {
 			categoriesPage = repository.searchCategories(keyword, pageable);
 		} else {
@@ -132,6 +132,12 @@ public class CategoryService {
 	}
 
 	public Category save(Category category) {
+		Category parent = category.getParent();
+		if (parent != null) {
+			String allParentIds = parent.getAllParentIDs() == null ? "-" : parent.getAllParentIDs();
+			allParentIds += String.valueOf(parent.getId() + "-");
+			category.setAllParentIDs(allParentIds);
+		}
 		return repository.save(category);
 	}
 

@@ -21,8 +21,8 @@
 	</div>
 
 	<th th:fragment="column_link(moduleURL, fieldName, columnLabel)"
-		class="text-center align-middle"><a
-		th:href="@{${moduleURL} + '/page/' + ${currentPage} + '?sortField=' + ${fieldName} + '&sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">[[${columnLabel}]]</a>
+		class="text-center align-middle"><a style="color: white;"
+		th:href="@{${moduleURL} + '/page/' + ${currentPage} + '?sortField=' + ${fieldName} + '&sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''} + ${categoryId != null ? '&categoryId=' + categoryId : ''}}">[[${columnLabel}]]</a>
 		<i th:if="${sortField == fieldName}"
 		th:class="${sortDir == 'asc' ? 'fa-solid fa-arrow-up-a-z' : 'fa-solid fa-arrow-down-z-a'}"></i>
 	</th>
@@ -30,7 +30,7 @@
 	<!-- Phân Trang -->
 	<a th:fragment="page_link(moduleURL, pageNum, label)"
 		class="page-link border-end-0"
-		th:href="@{'/'+${moduleURL}+'/page/' + ${pageNum} +'?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">[[${label}]]</a>
+		th:href="@{'/'+${moduleURL}+'/page/' + ${pageNum} +'?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''} + ${categoryId != null ? '&categoryId=' + categoryId : ''}}">[[${label}]]</a>
 
 
 
@@ -70,7 +70,7 @@
 					<li
 						th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
 						<a class="page-link"
-						th:href="@{'/'+ ${moduleURL} + '/page/' + ${totalPages} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">Last</a>
+						th:href="@{'/'+ ${moduleURL} + '/page/' + ${totalPages} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''} + ${categoryId != null ? '&categoryId=' + categoryId : ''}}">Last</a>
 					</li>
 				</ul>
 			</nav>
@@ -78,11 +78,11 @@
 	</div>
 
 	<div th:fragment="search_form(moduleURL)" class="container">
-		<form th:action="@{${moduleURL}}" class="form-inline">
-			<div class="mb-3 d-flex col-12 col-lg-8 mx-auto">
+		<form th:action="@{${moduleURL}}" class="form-inline d-block">
+			<div class="mb-3 d-flex col-12 col-md-8 mx-auto">
 				<input type="hidden" name="sortField" th:value="${sortField}" /> <input
 					type="hidden" name="sortDir" th:value="${sortDir}" /> <label
-					for="search" class="col-form-label fw-bold me-2 d-none d-md-block">Filter</label>
+					for="search" class="col-form-label fw-bold me-2 d-none d-md-block"></label>
 				<input type="search" class="form-control me-2" id="search"
 					name="keyword" required="required" th:value="${keyword}">
 
@@ -100,11 +100,11 @@
 	<div th:fragment="status(enabled, entityName, entityURL)">
 		<a th:if="${enabled == true}"
 			class="fa fa-check-circle fa-2x text-decoration-none icon-green"
-			th:href="@{${entityURL} + '/enabled/false' + '?pageNum=' + ${currentPage}+ '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + '&keyword='+${keyword}}"
+			th:href="@{${entityURL} + '/enabled/false' + '?pageNum=' + ${currentPage}+ '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + '&keyword='+${keyword} + ${categoryId != null ? '&categoryId=' + categoryId : ''}}"
 			th:title="'Disable this ' + ${entityName}"></a> <a
 			th:if="${enabled == false}"
 			class="fa fa-circle fa-2x text-decoration-none icon-silver"
-			th:href="@{${entityURL} + '/enabled/true' + '?pageNum=' + ${currentPage}+ '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + '&keyword='+${keyword}}"
+			th:href="@{${entityURL} + '/enabled/true' + '?pageNum=' + ${currentPage}+ '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + '&keyword='+${keyword} + ${categoryId != null ? '&categoryId=' + categoryId : ''}}"
 			th:title="'Enable this ' + ${entityName}"></a>
 	</div>
 
@@ -116,8 +116,7 @@
 	<a th:fragment="delete(entityName, entityId, deleteURL)"
 		th:href="@{${deleteURL}}"
 		class="text-danger text-decoration-none link-delete"
-		th:title="'Delete this ' + ${entityName}"
-		th:entityId="${entityId}"><i
+		th:title="'Delete this ' + ${entityName}" th:entityId="${entityId}"><i
 		class="fa fa-trash" aria-hidden="true"></i></a>
 
 </body>

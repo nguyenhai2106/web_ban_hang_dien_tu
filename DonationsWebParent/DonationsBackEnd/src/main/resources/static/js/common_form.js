@@ -1,8 +1,8 @@
 $(document)
 	.ready(
 		function() {
-			$("#buttonCancel").on("click", function() {
-				window.location = muduleURL;
+			$("#buttonCancel").click(function() {
+				window.location = moduleURL;
 			});
 			$("#fileImage")
 				.change(
@@ -16,7 +16,7 @@ $(document)
 							this.setCustomValidity("");
 							showImageThumbnail(this);
 						}
-					})
+					});
 		});
 
 function showImageThumbnail(fileInput) {

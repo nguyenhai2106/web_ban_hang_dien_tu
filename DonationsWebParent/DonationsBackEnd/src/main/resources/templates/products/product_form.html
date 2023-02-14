@@ -1,124 +1,166 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-<head th:replace="~{fragments :: page_head('Product Form', 'tag')}" />
-<link rel="stylesheet" th:href="@{/richtext/richtext.min.css}" />
-<script th:src="@{/richtext/jquery.richtext.min.js}"></script>
-</head>
-<body>
-	<div class="container-fluid">
-		<div th:replace="~{navigation :: navigationMenu}"></div>
-		<div align="center" class="my-4">
-			<h3>Manage Products | [[${pageTitle}]]</h3>
-		</div>
-		<div class="container">
-			<form th:action="@{/products/save}" method="post" enctype="multipart/form-data"
-				onsubmit="return checkUnique(this)" style="margin: 0 auto;"
-				th:object="${product}">
-				<input type="hidden" th:field="*{id}">
-				<!-- Nav tabs -->
-				<ul class="nav nav-tabs" id="myTab" role="tablist">
-					<li class="nav-item" role="presentation"><a class="nav-link"
-						data-bs-toggle="tab" href="#overview" data-bs-target="#overview"
-						type="button" role="tab">Overview</a></li>
-					<li class="nav-item" role="presentation"><a
-						class="nav-link" data-bs-toggle="tab" href="#description"
-						data-bs-target="#description" type="button" role="tab">Description</a>
-					</li>
-					<li class="nav-item" role="presentation"><a class="nav-link active"
-						data-bs-toggle="tab" href="#images" data-bs-target="#images"
-						type="button" role="tab">Images</a></li>
-					<li class="nav-item" role="presentation"><a class="nav-link"
-						data-bs-toggle="tab" href="#details" data-bs-target="#details"
-						type="button" role="tab">Details</a></li>
-					<li class="nav-item" role="presentation"><a class="nav-link"
-						data-bs-toggle="tab" href="#shipping" data-bs-target="#shipping"
-						type="button" role="tab">Shipping</a></li>
-				</ul>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+  <head>
+    <head th:replace="~{fragments :: page_head('Product Form', 'tag')}" />
+    <link rel="stylesheet" th:href="@{/richtext/richtext.min.css}" />
+    <script th:src="@{/richtext/jquery.richtext.min.js}"></script>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div th:replace="~{navigation :: navigationMenu}"></div>
+      <div align="center" class="my-4">
+        <h3>Manage Products | [[${pageTitle}]]</h3>
+      </div>
+      <div class="container">
+        <form
+          th:action="@{/products/save}"
+          method="post"
+          enctype="multipart/form-data"
+          onsubmit="return checkUnique(this)"
+          style="margin: 0 auto"
+          th:object="${product}"
+        >
+          <input
+            type="hidden"
+            th:field="*{id}"
+          />
+          <input
+            th:if="${product.category != null}"
+            type="hidden"
+            id="categoryId"
+            th:value="${product.category.id}"
+          />
+          <!-- Nav tabs -->
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <a
+                class="nav-link active"
+                data-bs-toggle="tab"
+                href="#overview"
+                data-bs-target="#overview"
+                type="button"
+                role="tab"
+                >Overview</a
+              >
+            </li>
+            <li class="nav-item" role="presentation">
+              <a
+                class="nav-link"
+                data-bs-toggle="tab"
+                href="#description"
+                data-bs-target="#description"
+                type="button"
+                role="tab"
+                >Description</a
+              >
+            </li>
+            <li class="nav-item" role="presentation">
+              <a
+                class="nav-link"
+                data-bs-toggle="tab"
+                href="#images"
+                data-bs-target="#images"
+                type="button"
+                role="tab"
+                >Images</a
+              >
+            </li>
+            <li class="nav-item" role="presentation">
+              <a
+                class="nav-link"
+                data-bs-toggle="tab"
+                href="#details"
+                data-bs-target="#details"
+                type="button"
+                role="tab"
+                >Details</a
+              >
+            </li>
+            <li class="nav-item" role="presentation">
+              <a
+                class="nav-link"
+                data-bs-toggle="tab"
+                href="#shipping"
+                data-bs-target="#shipping"
+                type="button"
+                role="tab"
+                >Shipping</a
+              >
+            </li>
+          </ul>
 
-				<!-- Tab panes -->
-				<div class="tab-content">
-					<div class="tab-pane p-3" id="overview" role="tabpanel">
-						<div th:replace="~{products/product_overview :: content}"></div>
-					</div>
-					<div class="tab-pane" id="description" role="tabpanel">
-						<div th:replace="~{products/product_description :: content}"></div>
-					</div>
-					<div class="tab-pane active" id="images" role="tabpanel">
-						<div th:replace="~{products/product_images :: content}"></div>
-					</div>
-					<div class="tab-pane" id="details" role="tabpanel">Details</div>
-					<div class="tab-pane" id="shipping" role="tabpanel">
-						<div th:replace="~{products/product_shipping :: content}"></div>
-					</div>
-				</div>
-				<div class="my-4 text-center">
-					<input type="submit" value="Save" class="btn btn-primary me-2" />
-					<input type="button" value="Cancel" class="btn btn-secondary"
-						id="buttonCancel" />
-				</div>
-			</form>
-		</div>
-		<div th:replace="~{modal_fragments :: modal_dialog}"></div>
-		<div th:replace="~{fragments :: footer}"></div>
-	</div>
-	<script type="text/javascript">
-		MAX_FILE_SIZE = 512000;
-		moduleURL = "[[@{/products}]]";
-		brandModuleURL = "[[@{/brands}]]";
-		dropdownBrands = $("#brand");
-		dropdownCategories = $("#category");
+          <!-- Tab panes -->
+          <div class="tab-content">
+            <div class="tab-pane p-3 active" id="overview" role="tabpanel">
+              <div th:replace="~{products/product_overview :: content}"></div>
+            </div>
+            <div class="tab-pane p-3" id="description" role="tabpanel">
+              <div
+                th:replace="~{products/product_description :: content}"
+              ></div>
+            </div>
+            <div class="tab-pane p-3" id="images" role="tabpanel">
+              <div th:replace="~{products/product_images :: content}"></div>
+            </div>
+            <div class="tab-pane p-3" id="details" role="tabpanel">
+              <div th:replace="~{products/product_details :: content}"></div>
+              <div>
+                <input
+                  type="button"
+                  class="btn btn-primary"
+                  value="Add More Details"
+                  id="addMoreDetail"
+                  onclick="addNextDetailSection()"
+                />
+              </div>
+            </div>
+            <div class="tab-pane p-3" id="shipping" role="tabpanel">
+              <div th:replace="~{products/product_shipping :: content}"></div>
+            </div>
+          </div>
+          <div class="my-4 text-center">
+            <input type="submit" value="Save" class="btn btn-primary me-2" />
+            <input
+              type="button"
+              value="Cancel"
+              class="btn btn-secondary"
+              id="buttonCancel"
+            />
+          </div>
+        </form>
+      </div>
 
-		$(document).ready(function() {
-			$("#shortDescription").richText();
-			$("#fullDescription").richText();
-			dropdownBrands.change(function() {
-				dropdownCategories.empty();
-				getCategories();
-			});
-			getCategories();
-		})
-		function getCategories() {
-			brandId = dropdownBrands.val();
-			url = brandModuleURL + "/" + brandId + "/categories";
-			$.get(url, function(responseJson) {
-				$.each(responseJson, function(index, category) {
-					$("<option>").val(category.id).text(category.name)
-							.appendTo(dropdownCategories);
-				});
-			});
-		}
-		function checkUnique(form) {
-			productId = $("#id").val();
-			productName = $("#name").val();
-			csrfValue = $("input[name='_csrf']").val();
-			
-			url = "[[@{/products/check_unique}]]";
-			params = {
-				id : productId,
-				name : productName,
-				_csrf : csrfValue
-			};
-			$.post(url, params, function(response) {
-				if (response == "OK") {
-					form.submit();
-				} else if (response == "Duplicate") {
-					showWarningModal("There is another product having same name " + productName);	
-				} else {
-					showErrorModal("Unknown response from server");
-				}
-				
-			}).fail(function() {
-				showErrorModal("Could not connect to the server");
-			});
-			return false;
-		}
-	</script>
-	<script type="text/javascript" th:src="@{/js/common_form.js}"></script>
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-		crossorigin="anonymous"></script>
-</body>
+      <div th:replace="~{modal_fragments :: modal_dialog}"></div>
+      <div th:replace="~{fragments :: footer}"></div>
+    </div>
+    <script type="text/javascript">
+      MAX_FILE_SIZE = 512000;
+      moduleURL = "[[@{/products}]]";
+      brandModuleURL = "[[@{/brands}]]";
+      defaultImageThumbnailSrc = "[[@{/images/default-image.png}]]";
+      checkUniqueUrl = "[[@{/products/check_unique}]]";
+      index = 1;
+    </script>
+    <script type="text/javascript" th:src="@{/js/common_form.js}"></script>
+    <script
+      type="text/javascript"
+      th:src="@{/js/product_form_overview.js}"
+    ></script>
+    <script
+      type="text/javascript"
+      th:src="@{/js/product_form_image.js}"
+    ></script>
+    <script
+      type="text/javascript"
+      th:src="@{/js/product_form_details.js}"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+  </body>
 </html>

@@ -11,7 +11,6 @@ public class ProductRestController {
 	
 	@PostMapping("/products/check_unique")
 	public String checkUnique(Integer id, String name) {
-		System.out.println("DA VAO DAY ROI NHA");
 		return service.checkUnique(id, name);
 	}
 }

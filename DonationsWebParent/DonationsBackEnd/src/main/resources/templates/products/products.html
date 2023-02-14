@@ -30,19 +30,59 @@
 					aria-label="Close"></button>
 			</div>
 		</div>
+		
+		<!-- Search Form -->
+		<div class="container">
+			<form th:action="@{/products/page/1}" class="form-inline d-block" id="searchForm">
+				<div class="mb-3 d-flex col-12 mx-auto row">
+					<input type="hidden" name="sortField" th:value="${sortField}" /> <input
+						type="hidden" name="sortDir" th:value="${sortDir}" />
+					<div class="col-4 row">
+						<div class="col-3">
+							<label class="col-form-label fw-bold">Category</label>
+						</div>
+						<div class="col-9">
+							<select name="categoryId" class="form-select" id="dropdownCategory">
+								<option th:value="0">All Categories</option>
+								<th:block th:each="category : ${listCategories}">
+									<option th:value="${category.id}" th:selected="(${categoryId}==${category.id})">[[${category.name}]]</option>
+								</th:block>
+							</select>
+						</div>
+					</div>
+					<div class="col-8 d-flex">
+						<label for="search"
+							class="col-form-label fw-bold me-2 d-none d-md-block"></label> <input
+							type="search" class="form-control me-2" id="search"
+							name="keyword" required="required" th:value="${keyword}">
+						<button type="submit" value="Search" class="btn btn-primary me-2">
+							<i class="fas fa-search"></i>
+						</button>
+						<button type="button" class="btn btn-secondary"
+							onclick=" return clearFilter();">
+							<i class="fas fa-eraser"></i>
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
 
-		<div th:replace="~{fragments :: search_form('/products/page/1')}"></div>
+
 
 		<div class="container d-none d-sm-block">
 			<table
 				class="table table-bordered table-striped table-hover table-responsive-xl">
 				<thead class="table-dark">
 					<tr>
-						<th class="text-center align-middle">ID</th>
+						<th
+							th:replace="~{fragments :: column_link('/products', 'id', 'ID')}"></th>
 						<th class="text-center align-middle">Product Image</th>
-						<th class="text-center align-middle">Product Name</th>
-						<th class="text-center align-middle">Brand</th>
-						<th class="text-center align-middle">Category</th>
+						<th
+							th:replace="~{fragments :: column_link('/products', 'name', 'Product Name')}"></th>
+						<th
+							th:replace="~{fragments :: column_link('/products', 'brand', 'Brand')}"></th>
+						<th
+							th:replace="~{fragments :: column_link('/products', 'category', 'Category')}"></th>
 						<th class="text-center align-middle">Enabled</th>
 						<th class="text-center">&nbsp;</th>
 					</tr>
@@ -51,9 +91,15 @@
 					<tr th:each="product : ${listProducts}">
 						<td class="text-center align-middle">[[${product.getId()}]]</td>
 						<td class="text-center align-middle"><img width="120"
-							alt="Product Main Image" th:src="@{${product.getMainImagePath()}}"
+							alt="Product Main Image"
+							th:src="@{${product.getMainImagePath()}}"
 							class="img-fluid border"></td>
-						<td class="align-middle" style="width: 55%">[[${product.getName()}]]</td>
+
+						<td class="align-middle" style="width: 55%"><a
+							th:href="@{'/products/detail/' + ${product.id}}"
+							th:title="${product.name}" class="pe-2 link-detail">[[${product.getShortName()}]]
+						</a></td>
+
 						<td class="align-middle text-center">[[${product.getBrand().getName()}]]</td>
 						<td class="align-middle text-center">[[${product.getCategory()}]]</td>
 						<td class="text-center align-middle">
@@ -62,7 +108,7 @@
 						</td>
 						<td class="text-center align-middle" style="width: 8%;"><a
 							th:href="@{'/products/detail/' + ${product.id}}"
-							title="View this product" class="pe-2"> <i
+							title="View this product" class="pe-2 link-detail"> <i
 								class="fas fa-file-alt text-primary" aria-hidden="true"></i>
 						</a> <a th:href="@{'/products/edit/' + ${product.id}}"
 							class="pe-2 text-decoration-none" title="Edit this product"><i
@@ -90,7 +136,10 @@
 							<div>[[${product.getName()}]]</div>
 						</td>
 						<td class="text-center align-middle" style="width: 30%"><a
-							th:href="@{'/products/edit/' + ${product.id}}"
+							th:href="@{'/products/detail/' + ${product.id}}"
+							title="View this product" class="pe-2"> <i
+								class="fas fa-file-alt text-primary" aria-hidden="true"></i>
+						</a> <a th:href="@{'/products/edit/' + ${product.id}}"
 							class="pe-2 text-decoration-none" title="Edit this user"><i
 								class="fa fa-edit text-primary" aria-hidden="true"></i></a> <a
 							th:href="@{'/products/delete/' + ${product.id}}"
@@ -125,6 +174,13 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="modal fade" id="detailModal">
+			<div class="modal-dialog modal-xl">
+				<div class="modal-content"></div>
+			</div>
+		</div>
+
 		<div th:replace="~{fragments :: pagination('products', 'products')}"></div>
 		<div th:replace="~{fragments :: footer}"></div>
 	</div>
@@ -133,6 +189,7 @@
 		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
 		crossorigin="anonymous"></script>
 	<script type="text/javascript">
+		moduleURL = "[[@{/products}]]";
 		$(document).ready(
 				function() {
 					$(".link-delete")
@@ -149,6 +206,17 @@
 														+ productId + "?");
 										$("#confirmModal").modal("show");
 									});
+
+					$(".link-detail").click(
+							function(e) {
+								e.preventDefault();
+								linkDetailURL = $(this).attr("href");
+								$("#detailModal").modal("show").find(
+										".modal-content").load(linkDetailURL);
+							})
+					$("#dropdownCategory").on("change", function(){
+						$("#searchForm").submit();
+					})
 				});
 		function clearFilter() {
 			window.location = "[[@{/products}]]"

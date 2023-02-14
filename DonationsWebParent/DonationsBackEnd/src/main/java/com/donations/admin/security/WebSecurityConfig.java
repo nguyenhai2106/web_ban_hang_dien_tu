@@ -33,8 +33,21 @@ public class WebSecurityConfig {
 		http.userDetailsService(userDetailsService())
 						.authorizeHttpRequests()
 						.requestMatchers("/users/**").hasAuthority("Admin")
+						
 						.requestMatchers("/categories/**", "/brands/**").hasAnyAuthority("Admin", "Editor")
-						.requestMatchers( "/products/**").hasAnyAuthority("Admin", "Editor", "Salesperson", "Shipper")
+						
+						
+						.requestMatchers( "/products/**").hasAnyAuthority("Admin", "Editor")
+						
+						.requestMatchers("/products", "/products/", "/products/detail/**", "products/page/**")
+							.hasAnyAuthority("Admin", "Editor", "Salesperson", "Shipper")
+							
+						.requestMatchers("/products/new", "/products/delete/**").hasAnyAuthority("Admin", "Editor")
+						
+						.requestMatchers("/products/edit/**", "/products/save", "/products/check_unique").hasAnyAuthority("Admin", "Editor", "Salesperson")
+						
+						.requestMatchers( "/products/**").hasAnyAuthority("Admin", "Editor")
+						
 						.anyRequest().authenticated()
 						.and()
 						.formLogin()
@@ -48,14 +61,6 @@ public class WebSecurityConfig {
 								.tokenValiditySeconds(7 * 24 * 60 * 60);
 		return http.build();
 	}
-
-//	@Bean
-//	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//		System.out.println("Đã vào đây!");
-//		http.authorizeHttpRequests().anyRequest().authenticated().and().formLogin().loginPage("/login")
-//				.usernameParameter("email").defaultSuccessUrl("/", true).permitAll();
-//		return http.build();
-//	}
 
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer(HttpSecurity http) {
