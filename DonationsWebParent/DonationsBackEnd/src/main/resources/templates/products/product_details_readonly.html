@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+	<div th:fragment="content" th:remove="tag">
+		<div class="row mx-auto" id="divProductDetails">
+			<table
+				class="table table-bordered table-striped table-hover table-responsive-xl">
+				<thead class="table-dark">
+					<tr>
+						<th class="text-center align-middle">Name</th>
+						<th class="text-center align-middle">Values</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="detail : ${product.details}">
+						<td class="align-middle">[[${detail.name}]]</td>
+						<td class="align-middle">[[${detail.value}]]</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+</html>

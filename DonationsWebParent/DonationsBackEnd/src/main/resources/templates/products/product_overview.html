@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <body>
 	<div th:fragment="content" th:remove="tag">
@@ -8,7 +9,8 @@
 				<label class="col-sm-2 col-form-label">Product Name</label>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" th:field="*{name}"
-						required="required" maxlength="256" minlength="3" />
+						required="required" maxlength="256" minlength="3"
+						th:readonly="${#authorization.expression('hasAuthority(''Salesperson'')')}" />
 				</div>
 			</div>
 			<div class="input-group mb-4 row">
@@ -16,70 +18,86 @@
 				<div class="col-sm-10">
 					<input type="text" class="form-control" th:field="*{alias}"
 						placeholder="Default is product name (space are replaced by dashes)"
-						maxlength="256" minlength="3" />
+						maxlength="256" minlength="3"
+						th:readonly="${#authorization.expression('hasAuthority(''Salesperson'')')}" />
 				</div>
 			</div>
 			<div class="input-group mb-3 row">
 				<label class="col-sm-2 form-check-label">Brand</label>
 				<div class="col-sm-10">
-					<select class="form-select" th:field="*{brand}" required="required">
-						<th:block th:each="brand : ${listBrands}">
-							<option th:value="${brand.id}">[[${brand.getName()}]]</option>
+					<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
+						<select class="form-select" th:field="*{brand}"
+							required="required">
+							<th:block th:each="brand : ${listBrands}">
+								<option th:value="${brand.id}">[[${brand.getName()}]]</option>
+							</th:block>
+						</select>
+					</th:block>
+					<th:block sec:authorize="hasAuthority('Salesperson')">
+							<input type="text" class="form-select"
+								th:value="${product.brand.name}" readonly="readonly" />
 						</th:block>
-					</select>
 				</div>
 			</div>
 			<div class="input-group mb-3 row">
 				<label class="col-sm-2 form-check-label">Category</label>
 				<div class="col-sm-10">
 					<th:block th:if="${product.category != null}">
-						<select class="form-select" th:field="*{category}"
-						required="required">
-						<th:block th:each="category : ${product.brand.categories}">
-							<option th:value="${category.id}">[[${category.name}]]</option>
+						<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
+							<select class="form-select" th:field="*{category}"
+								required="required">
+								<th:block th:each="category : ${product.brand.categories}">
+									<option th:value="${category.id}">[[${category.name}]]</option>
+								</th:block>
+							</select>
 						</th:block>
-					</select>
+						<th:block sec:authorize="hasAuthority('Salesperson')">
+							<input type="text" class="form-select"
+								th:value="${product.category.name}" readonly="readonly" />
+						</th:block>
 					</th:block>
 					<th:block th:if="${product.category == null}">
 						<select class="form-select" th:field="*{category}"
-						required="required">
-					</select>
+							required="required">
+						</select>
 					</th:block>
 				</div>
 			</div>
 			<div class="input-group mb-3 row">
 				<label class="col-sm-2 form-check-label">Enabled</label>
-				<div class="col-sm-10" >
+				<div class="col-sm-10">
 					<input type="checkbox" class="form-check-input"
-						th:field="*{enabled}" />
+						th:field="*{enabled}"
+						th:disabled="${#authorization.expression('hasAuthority(''Salesperson'')')}" />
 				</div>
 			</div>
 			<div class="input-group mb-3 row">
 				<label class="col-sm-2 form-check-label">In-Stock</label>
 				<div class="col-sm-10">
 					<input type="checkbox" class="form-check-input"
-						th:field="*{inStock}" />
+						th:field="*{inStock}"
+						th:disabled="${#authorization.expression('hasAuthority(''Salesperson'')')}" />
 				</div>
 			</div>
 			<div class="input-group mb-4 row">
 				<label class="col-sm-2 col-form-label">Cost</label>
 				<div class="col-sm-10">
 					<input type="number" class="form-control" th:field="*{cost}"
-						required="required" min="0"/>
+						required="required" min="0" />
 				</div>
 			</div>
 			<div class="input-group mb-4 row">
 				<label class="col-sm-2 col-form-label">Price</label>
 				<div class="col-sm-10">
 					<input type="number" class="form-control" th:field="*{price}"
-						required="required" min="0"/>
+						required="required" min="0" />
 				</div>
 			</div>
 			<div class="input-group mb-4 row">
 				<label class="col-sm-2 col-form-label">Discount Percent</label>
 				<div class="col-sm-10">
-					<input type="number" class="form-control" th:field="*{discountPercent}"
-						required="required" min="0"/>
+					<input type="number" class="form-control"
+						th:field="*{discountPercent}" required="required" min="0" />
 				</div>
 			</div>
 		</div>

@@ -10,17 +10,21 @@
 		<div class="container mt-2">
 			<div class="my-2">
 				<h2 align="center">Manage Products</h2>
-				<div class="d-none d-sm-block text-center">
-					<a class="btn btn-primary mb-2" th:href="@{/products/new}">Create
-						New Product</a> <a class="btn btn-secondary mb-2"
-						th:href="@{/products/export/csv}">Export To CSV</a>
-				</div>
-				<div class="d-md-none d-lg-none text-center">
-					<a class="mb-2 fas fa-folder-plus icon-dark fa-2x me-3"
-						th:href="@{/products/new}"></a> <a
-						class="mb-2 fas fa-file-csv fa-2x icon-dark me-3"
-						th:href="@{/products/export/csv}"></a>
-				</div>
+
+				<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
+					<div class="d-none d-sm-block text-center">
+						<a class="btn btn-primary mb-2" th:href="@{/products/new}">Create
+							New Product</a> <a class="btn btn-secondary mb-2"
+							th:href="@{/products/export/csv}">Export To CSV</a>
+					</div>
+					<div class="d-md-none d-lg-none text-center">
+						<a class="mb-2 fas fa-folder-plus icon-dark fa-2x me-3"
+							th:href="@{/products/new}"></a> <a
+							class="mb-2 fas fa-file-csv fa-2x icon-dark me-3"
+							th:href="@{/products/export/csv}"></a>
+					</div>
+				</th:block>
+
 			</div>
 			<div th:if="${message != null}"
 				class="alert alert-success alert-dismissible fade show col-8 mx-auto text-center"
@@ -30,10 +34,11 @@
 					aria-label="Close"></button>
 			</div>
 		</div>
-		
+
 		<!-- Search Form -->
 		<div class="container">
-			<form th:action="@{/products/page/1}" class="form-inline d-block" id="searchForm">
+			<form th:action="@{/products/page/1}" class="form-inline d-block"
+				id="searchForm">
 				<div class="mb-3 d-flex col-12 mx-auto row">
 					<input type="hidden" name="sortField" th:value="${sortField}" /> <input
 						type="hidden" name="sortDir" th:value="${sortDir}" />
@@ -42,10 +47,12 @@
 							<label class="col-form-label fw-bold">Category</label>
 						</div>
 						<div class="col-9">
-							<select name="categoryId" class="form-select" id="dropdownCategory">
+							<select name="categoryId" class="form-select"
+								id="dropdownCategory">
 								<option th:value="0">All Categories</option>
 								<th:block th:each="category : ${listCategories}">
-									<option th:value="${category.id}" th:selected="(${categoryId}==${category.id})">[[${category.name}]]</option>
+									<option th:value="${category.id}"
+										th:selected="(${categoryId}==${category.id})">[[${category.name}]]</option>
 								</th:block>
 							</select>
 						</div>
@@ -83,7 +90,9 @@
 							th:replace="~{fragments :: column_link('/products', 'brand', 'Brand')}"></th>
 						<th
 							th:replace="~{fragments :: column_link('/products', 'category', 'Category')}"></th>
-						<th class="text-center align-middle">Enabled</th>
+						<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
+							<th class="text-center align-middle">Enabled</th>
+						</th:block>
 						<th class="text-center">&nbsp;</th>
 					</tr>
 				</thead>
@@ -102,21 +111,27 @@
 
 						<td class="align-middle text-center">[[${product.getBrand().getName()}]]</td>
 						<td class="align-middle text-center">[[${product.getCategory()}]]</td>
-						<td class="text-center align-middle">
-							<div
-								th:replace="~{fragments :: status(${product.enabled}, 'product', '/products/' + ${product.id})}"></div>
-						</td>
+						<th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
+							<td class="text-center align-middle">
+								<div
+									th:replace="~{fragments :: status(${product.enabled}, 'product', '/products/' + ${product.id})}"></div>
+							</td>
+						</th:block>
 						<td class="text-center align-middle" style="width: 8%;"><a
 							th:href="@{'/products/detail/' + ${product.id}}"
 							title="View this product" class="pe-2 link-detail"> <i
 								class="fas fa-file-alt text-primary" aria-hidden="true"></i>
-						</a> <a th:href="@{'/products/edit/' + ${product.id}}"
-							class="pe-2 text-decoration-none" title="Edit this product"><i
-								class="fa fa-edit text-primary" aria-hidden="true"></i></a> <a
-							th:href="@{'/products/delete/' + ${product.id}}"
-							class="text-danger text-decoration-none link-delete"
-							title="Delete this product" th:productId="${product.id}"><i
-								class="fa fa-trash" aria-hidden="true"></i></a></td>
+						</a> <th:block
+								sec:authorize="hasAnyAuthority('Admin', 'Editor', 'Salesperson')">
+								<a th:href="@{'/products/edit/' + ${product.id}}"
+									class="pe-2 text-decoration-none" title="Edit this product"><i
+									class="fa fa-edit text-primary" aria-hidden="true"></i></a>
+							</th:block> <th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
+								<a th:href="@{'/products/delete/' + ${product.id}}"
+									class="text-danger text-decoration-none link-delete"
+									title="Delete this user" th:productId="${product.id}"><i
+									class="fa fa-trash" aria-hidden="true"></i></a>
+							</th:block></td>
 					</tr>
 				</tbody>
 			</table>
@@ -141,12 +156,13 @@
 								class="fas fa-file-alt text-primary" aria-hidden="true"></i>
 						</a> <a th:href="@{'/products/edit/' + ${product.id}}"
 							class="pe-2 text-decoration-none" title="Edit this user"><i
-								class="fa fa-edit text-primary" aria-hidden="true"></i></a> <a
-							th:href="@{'/products/delete/' + ${product.id}}"
-							class="text-danger text-decoration-none link-delete"
-							title="Delete this user" th:productId="${product.id}"><i
-								class="fa fa-trash" aria-hidden="true"></i></a></td>
-
+								class="fa fa-edit text-primary" aria-hidden="true"></i></a> <th:block
+								sec:authorize="hasAnyAuthority('Admin', 'Editor')">
+								<a th:href="@{'/products/delete/' + ${product.id}}"
+									class="text-danger text-decoration-none link-delete"
+									title="Delete this user" th:productId="${product.id}"><i
+									class="fa fa-trash" aria-hidden="true"></i></a>
+							</th:block></td>
 					</tr>
 				</tbody>
 			</table>
@@ -214,7 +230,7 @@
 								$("#detailModal").modal("show").find(
 										".modal-content").load(linkDetailURL);
 							})
-					$("#dropdownCategory").on("change", function(){
+					$("#dropdownCategory").on("change", function() {
 						$("#searchForm").submit();
 					})
 				});

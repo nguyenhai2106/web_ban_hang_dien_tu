@@ -1,6 +1,7 @@
 package com.donations.common.entity;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.hibernate.annotations.ManyToAny;
@@ -140,5 +141,16 @@ public class User {
 	@Transient
 	public String getFullName() {
 		return firstName + " " + lastName;
+	}
+	
+	public boolean hasRole(String name) {
+		Iterator<Role> iterator = roles.iterator();
+		while(iterator.hasNext()) {
+			Role role = iterator.next();
+			if (role.getName().equals(name)) {
+				return true;
+			}
+		}
+		return false;		
 	}
 }

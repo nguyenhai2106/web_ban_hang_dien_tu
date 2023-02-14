@@ -41,6 +41,14 @@ public class ProductService {
 		return savedProduct;
 	}
 
+	public void saveProductPrice(Product formProduct) {
+		Product productInDB = repository.findById(formProduct.getId()).get();
+		productInDB.setCost(formProduct.getCost());
+		productInDB.setPrice(formProduct.getPrice());
+		productInDB.setDiscountPercent(formProduct.getDiscountPercent());
+		repository.save(productInDB);
+	}
+
 	public String checkUnique(Integer id, String name) {
 		boolean isCreatingNew = (id == null || id == 0);
 		Product productByName = repository.findByName(name);

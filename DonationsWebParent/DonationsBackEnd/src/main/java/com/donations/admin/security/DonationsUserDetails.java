@@ -13,6 +13,12 @@ import com.donations.common.entity.Role;
 import com.donations.common.entity.User;
 
 public class DonationsUserDetails implements UserDetails {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private User user;
 
 	protected DonationsUserDetails(User user) {
@@ -23,7 +29,7 @@ public class DonationsUserDetails implements UserDetails {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Set<Role> roles = user.getRoles();
 		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-		roles.stream().forEach(role-> {
+		roles.stream().forEach(role -> {
 			authorities.add(new SimpleGrantedAuthority(role.getName()));
 		});
 		return authorities;
@@ -58,16 +64,20 @@ public class DonationsUserDetails implements UserDetails {
 	public boolean isEnabled() {
 		return user.isEnabled();
 	}
-	
+
 	public String getFullName() {
 		return this.user.getFirstName() + " " + this.user.getLastName();
 	}
-	
+
 	public void setFirstName(String firstName) {
 		this.user.setFirstName(firstName);
 	}
-	
+
 	public void setLastName(String lastName) {
 		this.user.setLastName(lastName);
+	}
+
+	public boolean hasRole(String roleName) {
+		return user.hasRole(roleName);
 	}
 }
