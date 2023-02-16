@@ -1,10 +1,29 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="ISO-8859-1">
-<title>Welcome to Donations</title>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments :: page_head('Home Page', 'none')}">
 </head>
 <body>
-	<h2>Welcome To Donations</h2>
+	<div class="container">
+		<div th:replace="~{navigation :: header_menu}"></div>
+		<div th:replace="~{fragments :: search_form('/products/page/1')}"></div>
+		<div>
+			<h3>Shopping by Categories</h3>
+		</div>
+		<div class="row">
+			<div class="col d-flex flex-column align-items-center"
+				th:each="category : ${listCategories}">
+				<div>
+					<img alt="Category image" th:src="@{${category.getImagePath()}}"
+						width="80" class="img-fluid" />
+				</div>
+				<div class="text-center p-3">
+					<a th:href="@{'/c/' + ${category.alias}}">[[${category.name}]]</a>
+				</div>
+			</div>
+		</div>
+
+		<div th:replace="~{navigation :: footer_menu}"></div>
+	</div>
 </body>
 </html>

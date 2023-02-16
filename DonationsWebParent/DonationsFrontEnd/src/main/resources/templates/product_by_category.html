@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments :: page_head(${pageTitle}, 'none')}">
+</head>
+<body class="container">
+	<div th:replace="~{navigation :: header_menu}"></div>
+	<div th:replace="~{fragments :: search_form('/products/page/1')}"></div>
+	<div>
+		<h3>Product in Categories</h3>
+	</div>
+	<div
+		th:if="${listCategoryParents != null && !listCategoryParents.empty}"
+		class="mt-3">
+		<div class="row">
+			<div class="col">
+				<nav style="-bs-breadcrumb-divider: '&gt;';" aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+						<th:block th:each="category : ${listCategoryParents}">
+							<li class="breadcrumb-item"><a
+								th:href="@{'/c/' + ${category.alias}}">[[${category.name}]]</a>
+							</li>
+						</th:block>
+					</ol>
+				</nav>
+			</div>
+		</div>
+	</div>
+	<div class="row justify-content-center my-2">
+		<th:block th:each="category : ${category.childrens}">
+			<div class="col p-2 text-center" th:if="${category.enabled == true}">
+				<a th:href="@{'/c/' + ${category.alias}}"> <img
+					class="img-fluid" th:src="@{${category.imagePath}}"
+					alt="Category Image" width="80" /> <br /> <b>[[${category.name}]]</b>
+				</a>
+			</div>
+		</th:block>
+	</div>
+	<div class="row">
+		<!-- Product card Start-->
+		<th:block th:each="product : ${listProducts}">
+			<div class="col-6 col-sm-4 col-lg-3 mb-4">
+				<div class="card text-center">
+					<div class="card-body">
+						<a href="#"> <img th:src="@{${product.mainImagePath}}"
+							width="150" alt="" class="img-fluid imageProduct" /></a>
+					</div>
+					<div class="row  p-1 ps-2" style="height: 58px; overflow: hidden;">
+						<b class="text-center">[[${product.name}]]</b>
+					</div>
+					<div>
+						<div th:if="${product.discountPercent <= 0}">
+							<b class="text-danger">VND [[${product.priceVND}]]</b>
+						</div>
+						<div th:if="${product.discountPercent > 0}">
+							<b class="text-danger">[[${product.discountPrice}]]</b> <br /> <b
+								class="text-secondary text-decoration-line-through">[[${product.priceVND}]]</b>
+						</div>
+					</div>
+				</div>
+			</div>
+		</th:block>
+	</div>
+	<div
+		th:replace="~{fragments :: pagination('c/'+${category.alias},'product')}"></div>
+	<div th:replace="~{navigation :: footer_menu}"></div>
+</body>
+</html>

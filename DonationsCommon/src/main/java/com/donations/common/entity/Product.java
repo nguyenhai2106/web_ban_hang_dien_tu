@@ -1,10 +1,12 @@
 package com.donations.common.entity;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.hibernate.annotations.Nationalized;
@@ -311,5 +313,22 @@ public class Product {
 			return name.substring(0, 80).concat("...");
 		}
 		return name;
-	}	
+	}
+
+	@Transient
+	public String getDiscountPrice() {
+		Locale currentLocale = new Locale("vi", "VN");
+		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(currentLocale);
+		if (discountPercent > 0) {
+			return currencyFormatter.format(price * (100 - discountPercent) / 100);
+		}
+		return currencyFormatter.format(this.price);
+	}
+	
+	@Transient
+	public String getPriceVND() {
+		Locale currentLocale = new Locale("vi", "VN");
+		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(currentLocale);
+		return currencyFormatter.format(this.price);
+	}
 }

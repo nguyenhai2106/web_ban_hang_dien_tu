@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+	<div th:fragment="header_menu">
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<div class="container-fluid">
+				<a class="navbar-brand" th:href="@{/}"><img alt="logo"
+					style="width: 150px;" th:src="@{/images/DonationLogo.jpg}"
+					class="rounded border"></a>
+				<button class="navbar-toggler" type="button"
+					data-bs-toggle="collapse" data-bs-target="#topNavbar"
+					aria-controls="navbarNav" aria-expanded="false"
+					aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="topNavbar">
+					<ul class="navbar-nav">
+						<li class="nav-item">
+							<div class="btn-group">
+								<div class="dropdown">
+									<a class="btn dropdown-toggle" th:href="@{/users}"
+										role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+										aria-expanded="false">Careers</a>
+									<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+										<li><a class="dropdown-item" th:href="@{/users/new}">Recruit</a></li>
+										<li><a class="dropdown-item" th:href="@{/users}">Policy</a></li>
+									</ul>
+								</div>
+							</div>
+						</li>
+
+
+
+						<li class="nav-item dropdown" style="padding-top: 1.2px">
+							<div class="btn-group">
+								<div class="dropdown">
+									<a class="btn dropdown-toggle" th:href="@{/account}"
+										role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+										aria-expanded="false">Payment</a>
+
+									<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+										<li><a class="dropdown-item" href="#" id="logoutLink">Payment</a></li>
+									</ul>
+								</div>
+							</div>
+						</li>
+
+						<li class="nav-item dropdown" style="padding-top: 1.2px">
+							<div class="btn-group">
+								<div class="dropdown">
+									<a class="btn dropdown-toggle" th:href="@{/account}"
+										role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+										aria-expanded="false">Shipping &amp; Delivery</a>
+
+									<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+										<li><a class="dropdown-item" href="#" id="logoutLink">Shipping</a></li>
+									</ul>
+								</div>
+							</div>
+						</li>
+
+						<li class="nav-item dropdown" style="padding-top: 1.2px">
+							<div class="btn-group">
+								<div class="dropdown">
+									<a class="btn dropdown-toggle" th:href="@{/account}"
+										role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+										aria-expanded="false">Log In</a>
+
+									<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+										<li><a class="dropdown-item" href="#" id="logoutLink">Log
+												In</a></li>
+									</ul>
+								</div>
+							</div>
+						</li>
+
+						<li class="nav-item dropdown" style="padding-top: 1.2px">
+							<div class="btn-group">
+								<div class="dropdown">
+									<a class="btn dropdown-toggle" th:href="@{/account}"
+										role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+										aria-expanded="false">Register</a>
+
+									<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+										<li><a class="dropdown-item" href="#" id="logoutLink">Register</a></li>
+									</ul>
+								</div>
+							</div>
+						</li>
+
+						<li class="nav-item dropdown" style="padding-top: 1.2px">
+							<div class="btn-group">
+								<div class="dropdown">
+									<a class="btn dropdown-toggle" th:href="@{/account}"
+										role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+										aria-expanded="false">Contact</a>
+
+									<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+										<li><a class="dropdown-item" href="#" id="logoutLink">Contact</a></li>
+									</ul>
+								</div>
+							</div>
+						</li>
+
+
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</div>
+
+	<div th:fragment="footer_menu">
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<div class="container-fluid">
+				<button class="navbar-toggler" type="button"
+					data-bs-toggle="collapse" data-bs-target="#topNavbar"
+					aria-controls="navbarNav" aria-expanded="false"
+					aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="bottomNavbar">
+					<ul class="navbar-nav">
+						
+						<li class="nav-item dropdown" style="padding-top: 1.2px">
+							<div class="btn-group">
+								<div class="dropdown">
+									<a class="btn" th:href="@{/account}" role="button"
+										id="dropdownMenuLink" data-bs-toggle="dropdown"
+										aria-expanded="false">About Us</a>
+								</div>
+							</div>
+						</li>
+						<li class="nav-item dropdown" style="padding-top: 1.2px">
+							<div class="btn-group">
+								<div class="dropdown">
+									<a class="btn" th:href="@{/account}" role="button"
+										id="dropdownMenuLink" data-bs-toggle="dropdown"
+										aria-expanded="false">Privacy Notice</a>
+								</div>
+							</div>
+						</li>
+
+						<li class="nav-item dropdown" style="padding-top: 1.2px">
+							<div class="btn-group">
+								<div class="dropdown">
+									<a class="btn" th:href="@{/account}" role="button"
+										id="dropdownMenuLink" data-bs-toggle="dropdown"
+										aria-expanded="false">Returns &amp; Refunds</a>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<div th:replace="~{fragments :: footer}"></div>
+	</div>
+</body>
+</html>

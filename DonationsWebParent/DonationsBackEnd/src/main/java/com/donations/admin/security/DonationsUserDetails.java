@@ -13,10 +13,7 @@ import com.donations.common.entity.Role;
 import com.donations.common.entity.User;
 
 public class DonationsUserDetails implements UserDetails {
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	
 	private User user;
