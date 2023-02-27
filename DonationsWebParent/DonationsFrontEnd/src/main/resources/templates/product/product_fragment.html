@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+	<div th:fragment="content" th:remove="tag">
+		<div class="col-6 col-sm-4 col-lg-3 mb-4">
+			<div class="card text-center">
+				<div class="card-body">
+					<a th:href="@{'/p/' + ${product.alias}}"> <img
+						th:src="@{${product.mainImagePath}}" width="200" alt=""
+						class="img-fluid imageProduct" /></a>
+				</div>
+				<div class="row  p-1 ps-2" style="height: 58px; overflow: hidden;">
+					<a th:href="@{'/p/' + ${product.alias}}"><b class="text-center">[[${product.name}]]</b></a>
+				</div>
+				<div class="mb-2">
+					<div th:if="${product.discountPercent <= 0}">
+						<b class="text-danger"> <th:block
+								th:replace="product/product_fragment::price_fragment(${product.price})"></th:block>
+						</b>
+					</div>
+					<div th:if="${product.discountPercent > 0}">
+						<b class="text-danger"> <th:block
+								th:replace="product/product_fragment::price_fragment(${product.discountPrice})"></th:block>
+						</b> <br /> <b class="text-secondary text-decoration-line-through">
+							<th:block
+								th:replace="product/product_fragment::price_fragment(${product.price})"></th:block>
+						</b>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:fragment="price_fragment(productPrice)" th:remove="tag">
+		<span th:if="${CURRENCY_SYMBOL_POSITION == 'Before Price'}"
+			th:remove="tag">[[${CURRENCY_SYMBOL}]]</span>[[${#numbers.formatDecimal(productPrice, 1, THOUSANDS_POINT_TYPE, DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]]<span
+			th:if="${CURRENCY_SYMBOL_POSITION != 'Before Price'}" th:remove="tag">[[${CURRENCY_SYMBOL}]]</span>
+	</th:block>
+</body>
+</html>

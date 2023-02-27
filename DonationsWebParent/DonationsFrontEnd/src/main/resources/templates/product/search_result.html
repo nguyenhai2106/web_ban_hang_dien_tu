@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments :: page_head(${pageTitle}, 'none')}">
+</head>
+<body>
+	<div class="container">
+		<div th:replace="~{navigation :: header_menu}"></div>
+		<div th:replace="~{fragments :: search_form('/search')}"></div>
+		<div th:if="${totalItems > 0}">
+			<h3 class="text-center text-primary">Search results for
+				'[[${keyword}]]'</h3>
+		</div>
+		
+		<div th:unless="${totalItems > 0}">
+			<h3 class="text-center text-primary">No product match for
+				'[[${keyword}]]'</h3>
+		</div>
+
+		<div class="row">
+			<!-- Product card Start-->
+			<th:block th:each="product : ${listResults}">
+				<div th:replace="~{product/product_fragment :: content}"></div>
+			</th:block>
+		</div>
+		<div th:replace="~{fragments :: pagination('search','product')}"></div>
+		<div th:replace="~{navigation :: footer_menu}"></div>
+	</div>
+</body>
+</html>

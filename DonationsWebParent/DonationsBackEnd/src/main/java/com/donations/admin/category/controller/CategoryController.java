@@ -20,10 +20,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.donations.admin.FileUploadUtil;
 import com.donations.admin.category.CategoryCsvExporter;
-import com.donations.admin.category.CategoryNotFoundException;
 import com.donations.admin.category.CategoryPageInfo;
 import com.donations.admin.category.CategoryService;
 import com.donations.common.entity.Category;
+import com.donations.common.exception.CategoryNotFoundException;
 
 import jakarta.servlet.http.HttpServletResponse;
 

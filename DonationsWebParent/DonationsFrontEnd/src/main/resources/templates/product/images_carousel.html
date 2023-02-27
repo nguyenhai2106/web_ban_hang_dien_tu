@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+	<div th:fragment="content" class="modal fade text-center"
+		id="carouselModal">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content bg-dark d-flex justify-content-center">
+				<div id="carouselExampleIntervalModal" class="carousel slide"
+					data-bs-ride="carousel">
+					<div class="carousel-inner">
+						<div class="carousel-item active text-center">
+							<img th:src="@{${product.mainImagePath}}" class="img-fluid"
+								alt="Main Image" style="max-width: 100%; height: auto;" />
+						</div>
+						<th:block th:each="extraImage : ${product.images}">
+							<div class="carousel-item text-center"
+								style="height: fit-content;">
+								<img th:src="@{${extraImage.extraImagePath}}"
+									class="img-fluid center-block" alt="Main Image"
+									style="max-width: 100%; height: auto;" />
+							</div>
+						</th:block>
+					</div>
+					<button class="carousel-control-prev" type="button"
+						data-bs-target="#carouselExampleIntervalModal"
+						data-bs-slide="prev">
+						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Previous</span>
+					</button>
+					<button class="carousel-control-next" type="button"
+						data-bs-target="#carouselExampleIntervalModal"
+						data-bs-slide="next">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Next</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

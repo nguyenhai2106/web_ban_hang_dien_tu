@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.donations.common.entity.Category;
+import com.donations.common.exception.CategoryNotFoundException;
 
 @Service
 public class CategoryService {
@@ -22,12 +23,16 @@ public class CategoryService {
 
 		listNoChildrenCategories = listEnabledCategories.stream()
 				.filter(category -> category.getChildrens().size() == 0 || category == null)
-				.collect(Collectors.toList());
+				.collect(Collectors.toList()); 
 		return listNoChildrenCategories;
 	}
 
-	public Category getCategory(String alias) {
-		return repository.findByAliasEnabled(alias);
+	public Category getCategory(String alias) throws CategoryNotFoundException {
+		Category category = repository.findByAliasEnabled(alias);
+		if (category == null) {
+			throw new CategoryNotFoundException("Could not find any category with alias " + alias);
+		}
+		return category;
 	}
 
 	public List<Category> getCategoryParents(Category category) {

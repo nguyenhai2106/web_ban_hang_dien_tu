@@ -1,4 +1,4 @@
-package com.donations.admin.category;
+package com.donations.common.exception;
 
 public class CategoryNotFoundException extends Exception {
 	public CategoryNotFoundException (String message) {

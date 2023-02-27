@@ -6,11 +6,11 @@
 <body>
 	<div class="container">
 		<div th:replace="~{navigation :: header_menu}"></div>
-		<div th:replace="~{fragments :: search_form('/products/page/1')}"></div>
+		<div th:replace="~{fragments :: search_form('/search')}"></div>
 		<div>
-			<h3>Shopping by Categories</h3>
+			<h3 class="text-center text-primary mb-4">Shopping by Categories</h3>
 		</div>
-		<div class="row">
+		<div class="row row-cols-3 row-cols-sm-4 row-cols-lg-6">
 			<div class="col d-flex flex-column align-items-center"
 				th:each="category : ${listCategories}">
 				<div>

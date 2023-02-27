@@ -310,19 +310,19 @@ public class Product {
 	@Transient
 	public String getShortName() {
 		if (name.length() > 80) {
-			return name.substring(0, 80).concat("...");
-		}
+			return name.substring(0, 80).concat(" . . .");
+		} 
 		return name;
 	}
 
 	@Transient
-	public String getDiscountPrice() {
-		Locale currentLocale = new Locale("vi", "VN");
-		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(currentLocale);
+	public float getDiscountPrice() {
+//		Locale currentLocale = new Locale("vi", "VN");
+//		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(currentLocale);
 		if (discountPercent > 0) {
-			return currencyFormatter.format(price * (100 - discountPercent) / 100);
+			return (price * (100 - discountPercent) / 100);
 		}
-		return currencyFormatter.format(this.price);
+		return (this.price);
 	}
 	
 	@Transient

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+	<div th:fragment="content" th:remove="tag">
+		<form th:action="@{/settings/save_general}" method="post" enctype="multipart/form-data">
+			<div class="input-group mb-4 row">
+				<label class="col-sm-3 col-form-label">Site Name</label>
+				<div class="col-sm-9">
+					<input type="text" class="form-control" name="SITE_NAME"
+						th:value="${SITE_NAME}" required="required" />
+				</div>
+			</div>
+
+			<div class="input-group mb-4 row">
+				<label class="col-sm-3 col-form-label">Copyright</label>
+				<div class="col-sm-9">
+					<input type="text" class="form-control" name="COPYRIGHT"
+						th:value="${COPYRIGHT}" required="required" />
+				</div>
+			</div>
+
+			<div class="input-group mb-3 row align-items-center">
+				<label class="col-3 col-sm-3 col-form-label mt-2" for="fileImage">Site
+					Logo</label>
+				<div class="col-9 col-sm-5 mt-2">
+					<input type="file" class="form-control" id="fileImage" accept="image/png, image/jpeg"
+						name="fileImage" />
+				</div>
+				<div class="col-12 col-sm-4 align-center">
+					<img alt="Site Logo" id="thumbnail" width="150"
+						th:src="@{${SITE_LOGO}}"
+						class="mx-auto d-block img-fluid rounded mt-2" />
+				</div>
+			</div>
+
+			<div class="input-group mb-3 row">
+				<label class="col-sm-3 col-form-label">Current Type</label>
+				<div class="col-sm-9">
+					<select class="form-select" name="CURRENCY_ID" required="required">
+						<th:block th:each="currency : ${listCurrencies}">
+							<option th:value="${currency.id}"
+								th:selected="(${currency.id} == ${CURRENCY_ID})">[[${currency}]]</option>
+						</th:block>
+					</select>
+				</div>
+			</div>
+
+			<div class="input-group mb-3 row">
+				<label class="col-sm-3 form-check-label">Current Symbol
+					Position</label>
+				<div class="col-sm-9">
+					<select class="form-select" name="CURRENCY_SYMBOL_POSITION"
+						required="required">
+						<option value="Before Price"
+							th:selected="(${CURRENCY_SYMBOL_POSITION} == 'Before Price')">Before
+							Price</option>
+						<option value="After Price"
+							th:selected="(${CURRENCY_SYMBOL_POSITION} == 'After Price')">After
+							Price</option>
+					</select>
+				</div>
+			</div>
+			<div class="input-group mb-3 row">
+				<label class="col-sm-3 form-check-label">Decimal Point Type</label>
+				<div class="col-sm-9">
+					<select class="form-select" name="DECIMAL_POINT_TYPE"
+						required="required">
+						<option value="POINT"
+							th:selected="(${DECIMAL_POINT_TYPE} == 'POINT')">Point
+							(.)</option>
+						<option value="COMMA"
+							th:selected="(${DECIMAL_POINT_TYPE} == 'COMMA')">Comma
+							(,)</option>
+					</select>
+
+				</div>
+			</div>
+			<div class="input-group mb-3 row">
+				<label class="col-sm-3 form-check-label">Decimal Digits</label>
+				<div class="col-sm-9">
+					<select class="form-select" name="DECIMAL_DIGITS"
+						required="required">
+						<option value="0" th:selected="(${DECIMAL_DIGITS} == 0)">0</option>
+						<option value="1" th:selected="(${DECIMAL_DIGITS} == 1)">1</option>
+						<option value="2" th:selected="(${DECIMAL_DIGITS} == 2)">2</option>
+						<option value="3" th:selected="(${DECIMAL_DIGITS} == 3)">3</option>
+						<option value="4" th:selected="(${DECIMAL_DIGITS} == 4)">4</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="input-group mb-3 row">
+				<label class="col-sm-3 form-check-label">Thousands Point
+					Type</label>
+				<div class="col-sm-9">
+					<select class="form-select" name="THOUSANDS_POINT_TYPE" required="required">
+						<option value="POINT"
+							th:selected="(${THOUSANDS_POINT_TYPE} == 'POINT')">Point
+							(.)</option>
+						<option value="COMMA"
+							th:selected="(${THOUSANDS_POINT_TYPE} == 'COMMA')">Comma
+							(,)</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="my-4 text-center">
+				<input type="submit" value="Save" class="btn btn-primary me-2" /> <input
+					type="button" value="Cancel" class="btn btn-secondary"
+					id="buttonCancel" />
+			</div>
+		</form>
+	</div>
+</body>
+</html>

@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
@@ -40,6 +41,7 @@ public class Category {
 	private Category parent;
 
 	@OneToMany(mappedBy = "parent")
+	@OrderBy("name asc")
 	private Set<Category> childrens = new HashSet<>();
 
 	public Category() {

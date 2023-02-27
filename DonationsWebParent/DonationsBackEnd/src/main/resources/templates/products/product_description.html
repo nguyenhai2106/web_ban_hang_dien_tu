@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <body>
 	<div th:fragment="content" th:remove="tag">
 		<div class="p-2">
@@ -9,11 +8,13 @@
 			<textarea class="form-control" th:field="*{shortDescription}"
 				rows="6" required="required"></textarea>
 		</div>
-		<div class="p-2">
+		<div class="p-2 form-group">
 			<label for="fullDescription" class="form-label">Full
 				Description</label>
-			<textarea class="form-control" th:field="*{fullDescription}" rows="6" required="required"></textarea>
+			<textarea th:field="*{fullDescription}" class="form-control"
+				rows="10" required="required"></textarea>
 		</div>
 	</div>
 </body>
+
 </html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<head
+	th:replace="~{fragments :: page_head('Settings - Donations Admin', 'tag')}" />
+<link rel="stylesheet" th:href="@{/richtext/richtext.min.css}" />
+<script th:src="@{/richtext/jquery.richtext.min.js}"></script>
+</head>
+<body>
+	<div class="container-fluid">
+		<div th:replace="~{navigation :: navigationMenu}"></div>
+		<div align="center" class="my-4">
+			<h3 class="text-primary">Site Settings</h3>
+			<div th:if="${message != null}"
+				class="alert alert-success alert-dismissible fade show col-8 mx-auto text-center"
+				role="alert">
+				[[${message}]]
+				<button type="button" class="btn-close" data-bs-dismiss="alert"
+					aria-label="Close"></button>
+			</div>
+		</div>
+		<div class="container">
+
+			<!-- Nav tabs -->
+			<ul class="nav nav-tabs" id="settingTab" role="tablist">
+				<li class="nav-item" role="presentation"><a
+					class="nav-link active" data-bs-toggle="tab" href="#general"
+					data-bs-target="#general" type="button" role="tab">General</a></li>
+				<li class="nav-item" role="presentation"><a class="nav-link"
+					data-bs-toggle="tab" href="#countries" data-bs-target="#countries"
+					type="button" role="tab">Countries</a></li>
+				<li class="nav-item" role="presentation"><a class="nav-link"
+					data-bs-toggle="tab" href="#states" data-bs-target="#states"
+					type="button" role="tab">States</a></li>
+				<li class="nav-item" role="presentation"><a class="nav-link"
+					data-bs-toggle="tab" href="#mailServer"
+					data-bs-target="#mailServer" type="button" role="tab">Mail
+						Server</a></li>
+				<li class="nav-item" role="presentation"><a class="nav-link"
+					data-bs-toggle="tab" href="#mailTemplates"
+					data-bs-target="#mailTemplates" type="button" role="tab">Mail
+						Templates</a></li>
+			</ul>
+
+			<!-- Tab panes -->
+			<div class="tab-content">
+				<div class="tab-pane p-3 active" id="general" role="tabpanel">
+					<div th:replace="~{settings/general :: content}"></div>
+				</div>
+				<div class="tab-pane p-3" id="countries" role="tabpanel">
+					countries</div>
+
+				<div class="tab-pane p-3" id="states" role="tabpanel">states</div>
+
+				<div class="tab-pane p-3" id="mailServer" role="tabpanel">
+					mailServer</div>
+
+				<div class="tab-pane p-3" id="mailTemplates" role="tabpanel">
+					mailTemplates</div>
+
+			</div>
+		</div>
+		<div th:replace="~{fragments :: footer}"></div>
+	</div>
+	<script type="text/javascript">
+		MAX_FILE_SIZE = 102400;
+	</script>
+	<script type="text/javascript" th:src="@{/js/common_form.js}"></script>
+</body>
+</html>

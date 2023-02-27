@@ -5,7 +5,7 @@
 </head>
 <body class="container">
 	<div th:replace="~{navigation :: header_menu}"></div>
-	<div th:replace="~{fragments :: search_form('/products/page/1')}"></div>
+	<div th:replace="~{fragments :: search_form('/search')}"></div>
 	<div>
 		<h3>Product in Categories</h3>
 	</div>
@@ -40,26 +40,7 @@
 	<div class="row">
 		<!-- Product card Start-->
 		<th:block th:each="product : ${listProducts}">
-			<div class="col-6 col-sm-4 col-lg-3 mb-4">
-				<div class="card text-center">
-					<div class="card-body">
-						<a href="#"> <img th:src="@{${product.mainImagePath}}"
-							width="150" alt="" class="img-fluid imageProduct" /></a>
-					</div>
-					<div class="row  p-1 ps-2" style="height: 58px; overflow: hidden;">
-						<b class="text-center">[[${product.name}]]</b>
-					</div>
-					<div>
-						<div th:if="${product.discountPercent <= 0}">
-							<b class="text-danger">VND [[${product.priceVND}]]</b>
-						</div>
-						<div th:if="${product.discountPercent > 0}">
-							<b class="text-danger">[[${product.discountPrice}]]</b> <br /> <b
-								class="text-secondary text-decoration-line-through">[[${product.priceVND}]]</b>
-						</div>
-					</div>
-				</div>
-			</div>
+			<div th:replace="~{product/product_fragment :: content}"></div>
 		</th:block>
 	</div>
 	<div
